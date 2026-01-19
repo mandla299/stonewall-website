@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
+import whiteCubes from '../assets/white-cubes.png';
 
 const Footer = () => {
   const linkSections = [
@@ -48,11 +49,12 @@ const Footer = () => {
   ];
 
   return (
+    <footer className="bg-gray-100 text-[#1e1b4b]">
     <div className="px-6 md:px-16 lg:px-24 xl:px-32">
       <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500">
         {/* Logo Section */}
         <Link to="/" className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200] rounded-md">
-                    <img src="/favicon_128x128.png" alt="Stonewall Data Solutions Logo" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+                    <img src={whiteCubes} alt="Stonewall Data Solutions Logo" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
                     <div className="flex flex-col leading-tight">
                       <span className="text-[#1e1b4b] font-extrabold text-base sm:text-xl tracking-tight">
                         Stonewall Data Solutions
@@ -95,6 +97,7 @@ const Footer = () => {
         Copyright 2025 © <Link to="/">Stonewall Data Solutions</Link> All Right Reserved.
       </p>
     </div>
+  </footer>
   );
 };
 

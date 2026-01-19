@@ -20,7 +20,7 @@ const HeroSection = () => {
           >
             Explore the Power of{" "}
             <span className="text-[#ff7200]">
-              Clean,
+              Clean, 
               {/* Only force a line break on medium+ screens */}
               <br className="hidden md:block" />
               Actionable

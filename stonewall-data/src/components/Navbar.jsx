@@ -5,6 +5,7 @@ import AboutModal from './modals/AboutModal';
 import ServicesModal from './modals/ServicesModal';
 import IndustriesModal from './modals/IndustriesModal';
 import { ChevronDown, Menu, X } from 'lucide-react';
+import whiteCubes from '../assets/white-cubes.png';
 
 
 const Navbar = () => {
@@ -83,7 +84,7 @@ const Navbar = () => {
         <div className="mx-auto max-w-7xl flex items-center justify-between">
           {/* Brand / Logo */}
           <Link to="/" className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200] rounded-md">
-            <img src="/favicon_128x128.png" alt="Stonewall Data Solutions Logo" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+            <img src={whiteCubes} alt="Stonewall Data Solutions Logo" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
             <div className="flex flex-col leading-tight">
               <span className="text-[#1e1b4b] font-extrabold text-base sm:text-xl tracking-tight">
                 Stonewall Data Solutions
