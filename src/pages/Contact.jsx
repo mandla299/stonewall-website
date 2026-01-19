@@ -6,7 +6,7 @@ import ContactForm from "../components/contact/ContactForm";
 const Contact = () => {
   const org = {
     name: "SW Data Solutions",
-    email: "mandla@swdatasolutions.com",
+    email: "admin@swdatasolutions.com",
     phoneDisplay: "+27 79 408 3701",
     phoneHref: "+27794083701",
     street: "187 Lilian Ngoyi St",

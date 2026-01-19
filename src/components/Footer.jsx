@@ -60,7 +60,7 @@ const Footer = () => {
                         Stonewall Data Solutions
                       </span>
                       <span className="text-xs sm:text-sm font-medium text-[#ff7200]">
-                        Structure the Data. &amp; Unlock the Value.
+                        Structure the Data &amp; Unlock the Value.
                       </span>
                     </div>
                   </Link>
