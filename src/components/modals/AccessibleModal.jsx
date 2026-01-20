@@ -88,7 +88,7 @@ const AccessibleModal = ({ title, description, onClose, children }) => {
       tabIndex={-1}
     >
       {/* Header */}
-      <div className="flex items-start gap-3 px-5 sm:px-6 pt-5 sm:pt-6">
+      <div className="flex -mt-4 items-start gap-3 px-5 sm:px-6 pt-5 sm:pt-6">
         <div className="flex-1">
           <h2
             id={titleId}

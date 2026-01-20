@@ -43,41 +43,6 @@ const ServicesModal = ({ onClose }) => {
             <ArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:text-white" size={16} />
           </Link>
 
-          <Link
-            to="/services/#data-entry-capture"
-            onClick={onClose}
-            className="group flex items-center text-base sm:text-lg text-[#1e1b4b] gap-2 px-3 py-2 rounded-md bg-transparent hover:bg-[#ff7200] hover:text-white transition-colors"
-          >
-            Data Entry
-            <ArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:text-white" size={16} />
-          </Link>
-
-          <Link
-            to="/services/#survey-data-entry"
-            onClick={onClose}
-            className="group flex items-center text-base sm:text-lg text-[#1e1b4b] gap-2 px-3 py-2 rounded-md bg-transparent hover:bg-[#ff7200] hover:text-white transition-colors"
-          >
-            Survey Data Entry &amp; Analysis
-            <ArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:text-white" size={16} />
-          </Link>
-
-          <Link
-            to="/services/#image-to-text"
-            onClick={onClose}
-            className="group flex items-center text-base sm:text-lg text-[#1e1b4b] gap-2 px-3 py-2 rounded-md bg-transparent hover:bg-[#ff7200] hover:text-white transition-colors"
-          >
-            Image-to-Text (OCR)
-            <ArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:text-white" size={16} />
-          </Link>
-
-          <Link
-            to="/services/#data-validation"
-            onClick={onClose}
-            className="group flex items-center text-base sm:text-lg text-[#1e1b4b] gap-2 px-3 py-2 rounded-md bg-transparent hover:bg-[#ff7200] hover:text-white transition-colors"
-          >
-            Data Validation
-            <ArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:text-white" size={16} />
-          </Link>
         </nav>
 
         {/* Right Column: Service Philosophy */}
