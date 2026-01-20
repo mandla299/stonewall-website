@@ -12,8 +12,10 @@ import TrackProject from './pages/TrackProject';
 import ScrollToHash from './components/ScrollToHash'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
+import useAnalytics from './hooks/useAnalytics'
 
 const App = () => {
+  useAnalytics()
   return (
     <div>
       <Navbar />
