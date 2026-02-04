@@ -5,48 +5,48 @@ import whiteCubes from '../assets/white-cubes.png';
 
 const Footer = () => {
   const linkSections = [
-    {
-      title: 'Quick Links',
-      links: [
-        { label: 'FAQs', path: '/contact#frequently-asked-questions', isHash: true },
-        { label: 'Refund Policy', path: '/refund-policy' },
-        { label: 'Privacy Policy', path: '/privacy-policy' },
-        { label: 'Terms of Service', path: '/terms-of-service' },
-      ],
-    },
-    
-{
-  title: 'Contact',
-  links: [
-    {
-      label: 'Phone',
-      path: 'tel:+27794083701',
-      isExternal: false, // still handled as a link
-      display: '+27 79 408 3701',
-    },
-    {
-      label: 'Email',
-      path: 'mailto:mandla@swdatasolutions.com',
-      isExternal: false,
-      display: 'mandla@swdatasolutions.com',
-    },
-    {
-      label: 'Address',
-      path: 'https://maps.google.com/?q=187+Lilian+Ngoyi+St,+Johannesburg,+2000,+South+Africa',
-      isExternal: true,
-      display: '187 Lilian Ngoyi St, Johannesburg, 2000, South Africa',
-    },
-  ],
-}
-,
-    {
-      title: 'Follow Us',
-      links: [
-        { label: 'LinkedIn', path: 'https://linkedin.com/in/stonewall-data-solutions-48a2023a6/' },
-        { label: 'Facebook', path: 'https://facebook.com/profile.php?id=61586404089541' },
-      ],
-    },
-  ];
+  {
+    title: 'Quick Links',
+    links: [
+      { label: 'FAQs', path: '/contact#frequently-asked-questions', isHash: true },
+      { label: 'Refund Policy', path: '/refund-policy' },
+      { label: 'Privacy Policy', path: '/privacy-policy' },
+      { label: 'Terms of Service', path: '/terms-of-service' },
+    ],
+  },
+  {
+    title: 'Contact',
+    links: [
+      {
+        label: 'Phone',
+        path: 'tel:+27794083701',
+        isExternal: false,
+        display: '+27 79 408 3701',
+      },
+      {
+        label: 'Email',
+        path: 'mailto:mandla@swdatasolutions.com',
+        isExternal: false,
+        display: 'mandla@swdatasolutions.com',
+      },
+      {
+        label: 'Address',
+        path:
+          'https://maps.google.com/?q=187+Lilian+Ngoyi+St,+Johannesburg,+2000,+South+Africa',
+        isExternal: true,
+        display: '187 Lilian Ngoyi St, Johannesburg, 2000, South Africa',
+      },
+    ],
+  },
+  {
+    title: 'Follow Us',
+    links: [
+      { label: 'LinkedIn', path: 'https://linkedin.com/in/stonewall-data-solutions-48a2023a6/' },
+      { label: 'Facebook', path: 'https://facebook.com/profile.php?id=61586404089541' },
+    ],
+  },
+];
+
 
   return (
     <footer className="bg-gray-100 text-[#1e1b4b]">
