@@ -23,12 +23,12 @@ const Contact = () => {
       {/* Hero */}
       <section
         aria-labelledby="contact-hero-title"
-        className="bg-gradient-to-br from-[#e8e3fb] via-[#ecebea] to-[#edf7f1] py-20 px-6 md:px-12 lg:px-24"
+        className="bg-gradient-to-br from-[#9689a0] to-blue-600 py-20 px-6 md:px-12 lg:px-24"
       >
         <div className="max-w-4xl mx-auto text-center">
           <h1
             id="contact-hero-title"
-            className="text-3xl sm:text-4xl md:text-5xl text-[#332E81] font-extrabold mb-6 leading-snug"
+            className="text-3xl sm:text-4xl md:text-5xl text-white font-extrabold mb-6 leading-snug"
           >
             Start the Conversation. Let’s Build Your Workflow Together
           </h1>
