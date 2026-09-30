@@ -1,77 +1,112 @@
-import React from 'react';
-
-const services = [
-  'Transcription',
-  'Data Entry',
-  'Data Cleaning',
-  'Survey Capture',
-  'Sanitation Logging',
-  'Issue Reporting',
-];
-
 const industries = [
   {
-    name: 'Healthcare & Clinics',
-    applicable: [true, true, true, false, true, true],
+    name: "Healthcare & Clinics",
+    capture: "Patient intake and administrative forms",
+    cleaning: "Duplicate records and inconsistent fields",
+    transcription: "Recorded consultations and discussions",
   },
   {
-    name: 'Education & Research',
-    applicable: [true, true, true, true, false, false],
+    name: "Education & Research",
+    capture: "Surveys, enrolment forms, and research notes",
+    cleaning: "Student records and survey datasets",
+    transcription: "Lectures and research interviews",
   },
   {
-    name: 'Field Operations & NGOs',
-    applicable: [false, true, true, true, false, true],
+    name: "Field Operations & NGOs",
+    capture: "Completed field surveys and activity logs",
+    cleaning: "Location names and response categories",
+    transcription: "Community interviews and meetings",
   },
   {
-    name: 'Cleaning & Facilities',
-    applicable: [false, false, true, false, true, true],
+    name: "Facilities Management",
+    capture: "Existing checklists and maintenance logs",
+    cleaning: "Zone names, dates, and staff references",
+    transcription: "Recorded handovers and meetings",
   },
   {
-    name: 'Finance & Insurance',
-    applicable: [true, true, true, false, false, false],
+    name: "Finance & Insurance",
+    capture: "Statements and client onboarding forms",
+    cleaning: "Client records and transaction fields",
+    transcription: "Recorded meetings and advisory sessions",
   },
   {
-    name: 'Legal & Compliance',
-    applicable: [true, true, true, false, false, false],
+    name: "Legal & Compliance",
+    capture: "Case documents and agreed metadata",
+    cleaning: "Matter references, names, and dates",
+    transcription: "Recorded hearings and interviews",
+  },
+  {
+    name: "Retail & Commerce",
+    capture: "Product catalogues and inventory records",
+    cleaning: "SKUs, categories, and duplicate entries",
+    transcription: "Recorded interviews and team discussions",
+  },
+  {
+    name: "Logistics & Operations",
+    capture: "Manifests and delivery notes",
+    cleaning: "Routes, locations, and timestamps",
+    transcription: "Recorded operational meetings",
   },
 ];
 
 const ServiceMatrix = () => {
   return (
-    <section className="bg-[#fefefe] text-[#1e1b4b] py-20 px-4 sm:px-6 md:px-12 lg:px-24 overflow-x-auto">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl md:text-4xl font-extrabold text-center mb-10">
-          Service Matrix — Who Needs What
+    <section aria-labelledby="service-matrix-heading" className="bg-[#faf8f5]">
+      <div className="mx-auto max-w-7xl px-6 pb-20 sm:px-8 lg:pb-24">
+        <p className="mb-4 text-xs font-bold tracking-[0.2em] text-[#b84300] uppercase">
+          Services at a glance
+        </p>
+
+        <h2
+          id="service-matrix-heading"
+          className="text-3xl leading-tight font-extrabold tracking-[-0.04em] text-[#10152f] sm:text-4xl"
+        >
+          Find a starting point for your project.
         </h2>
 
-        <table className="min-w-full border-collapse text-sm md:text-base">
-          <thead>
-            <tr>
-              <th className="text-left font-bold p-3 bg-[#ff7200] text-white rounded-tl-lg">Industry</th>
-              {services.map((service) => (
-                <th key={service} className="text-center font-bold p-3 bg-[#ff7200] text-white">
-                  {service}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {industries.map(({ name, applicable }, rowIndex) => (
-              <tr key={name} className="even:bg-[#f2f2f2] odd:bg-[#e6ebf4]">
-                <td className="p-3 font-semibold">{name}</td>
-                {applicable.map((isApplicable, colIndex) => (
-                  <td key={colIndex} className="text-center p-3">
-                    {isApplicable ? (
-                      <span className="text-green-600 font-bold">✓</span>
-                    ) : (
-                      <span className="text-gray-400">—</span>
-                    )}
-                  </td>
-                ))}
+        <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600">
+          Common examples across sectors. We confirm suitability, scope, and
+          information handling requirements for each project.
+        </p>
+
+        <p id="matrix-scroll-hint" className="mt-6 text-xs text-slate-500">
+          On smaller screens, scroll the table sideways to view all services.
+        </p>
+
+        <div
+          role="region"
+          aria-labelledby="service-matrix-heading"
+          aria-describedby="matrix-scroll-hint"
+          tabIndex={0}
+          className="sw-matrix-scroll mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white"
+        >
+          <table className="sw-service-matrix">
+            <caption className="sr-only">
+              Illustrative uses of data capture, data cleaning, and
+              transcription across eight sectors.
+            </caption>
+
+            <thead>
+              <tr>
+                <th scope="col">Industry</th>
+                <th scope="col">Data capture</th>
+                <th scope="col">Data cleaning</th>
+                <th scope="col">Transcription</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {industries.map((industry) => (
+                <tr key={industry.name}>
+                  <th scope="row">{industry.name}</th>
+                  <td>{industry.capture}</td>
+                  <td>{industry.cleaning}</td>
+                  <td>{industry.transcription}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   );

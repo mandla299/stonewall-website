@@ -1,5 +1,4 @@
-
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ClipboardList,
   ScanText,
@@ -12,18 +11,18 @@ import {
   Download as DownloadIcon,
   WrapText as WrapIcon,
   ListOrdered as ListIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
 // Adjust the import path to your file tree
-import AccessibleModal from '../modals/AccessibleModal';
+import AccessibleModal from "../modals/AccessibleModal";
 
 /* ----------------------------- Sample data ----------------------------- */
 /* NOTE: Avoid HTML entities like &amp; in JS strings—use & directly. */
 const dataCaptureModes = [
   {
-    title: 'Structured Form Capture',
+    title: "Structured Form Capture",
     description:
-      'Ideal for surveys, onboarding, and compliance workflows. Fields are validated, labeled, and styled for clarity and accessibility.',
+      "Ideal for surveys, onboarding, and compliance workflows. Fields are validated, labeled, and styled for clarity and accessibility.",
     sample: `Name: Katleho
 Email: katleho@stonewall.co.za
 Consent: ✅`,
@@ -44,9 +43,9 @@ Service Tier: Premium
     icon: ClipboardList,
   },
   {
-    title: 'OCR & Document Parsing',
+    title: "OCR & Document Parsing",
     description:
-      'Extracts text from scanned forms, receipts, and IDs. Perfect for digitizing paperwork and automating archival.',
+      "Extracts text from scanned forms, receipts, and IDs. Perfect for digitizing paperwork and automating archival.",
     sample: `Invoice #2031
 Total: R1,250.00
 Due: 30 Sep 2025`,
@@ -70,9 +69,9 @@ Status: Unpaid
     icon: ScanText,
   },
   {
-    title: 'User-Attributed Input',
+    title: "User-Attributed Input",
     description:
-      'Tracks who entered what, when, and why. Great for collaborative logs, shift handovers, and accountability.',
+      "Tracks who entered what, when, and why. Great for collaborative logs, shift handovers, and accountability.",
     sample: `Katleho (11:42 AM): Updated client status to “Onboarding”`,
     fullSample: `User Attribution — A4 Preview
 
@@ -87,9 +86,9 @@ Katleho (2:30 PM): Resolved payment issue and marked invoice as paid
     icon: UserCheck,
   },
   {
-    title: 'Spreadsheet Import & Sync',
+    title: "Spreadsheet Import & Sync",
     description:
-      'Bulk upload structured data from Excel or CSV. Supports mapping, validation, and real-time sync with dashboards.',
+      "Bulk upload structured data from Excel or CSV. Supports mapping, validation, and real-time sync with dashboards.",
     sample: `Row 14: [Client: Neo | Status: Active | Joined: 2025-08-01]`,
     fullSample: `Spreadsheet Sync — A4 Preview
 
@@ -110,9 +109,9 @@ Sync Status: Complete
     icon: FileSpreadsheet,
   },
   {
-    title: 'Time-Based Entry',
+    title: "Time-Based Entry",
     description:
-      'Captures data with timestamps for audits, reviews, and time-sensitive workflows. Useful for cleaning logs, delivery tracking, and attendance.',
+      "Captures data with timestamps for audits, reviews, and time-sensitive workflows. Useful for cleaning logs, delivery tracking, and attendance.",
     sample: `[10:15 AM] Cleaner #4 completed Zone B`,
     fullSample: `Time-Based Entry — A4 Preview
 
@@ -131,9 +130,9 @@ Supervisor Notes: No issues reported
     icon: TimerReset,
   },
   {
-    title: 'Custom Logic & Validation',
+    title: "Custom Logic & Validation",
     description:
-      'Smart forms with conditional fields, error handling, and branded feedback. Ensures data integrity and user confidence.',
+      "Smart forms with conditional fields, error handling, and branded feedback. Ensures data integrity and user confidence.",
     sample: `“Please enter a valid phone number.”
 → +27 82 123 4567 ✅`,
     fullSample: `Validation Logic — A4 Preview
@@ -160,30 +159,20 @@ Error Handling:
 
 /* ----------------------------- Utilities ----------------------------- */
 
-function useCopyFeedback(timeout = 1400) {
-  const [copied, setCopied] = useState(false);
-  useEffect(() => {
-    if (!copied) return;
-    const t = setTimeout(() => setCopied(false), timeout);
-    return () => clearTimeout(t);
-  }, [copied, timeout]);
-  return { copied, setCopied };
-}
-
 async function copyToClipboard(text) {
   try {
     await navigator.clipboard.writeText(text);
     return true;
   } catch {
     try {
-      const ta = document.createElement('textarea');
+      const ta = document.createElement("textarea");
       ta.value = text;
-      ta.setAttribute('readonly', '');
-      ta.style.position = 'absolute';
-      ta.style.left = '-9999px';
+      ta.setAttribute("readonly", "");
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
       document.body.appendChild(ta);
       ta.select();
-      const ok = document.execCommand('copy');
+      const ok = document.execCommand("copy");
       document.body.removeChild(ta);
       return ok;
     } catch {
@@ -193,11 +182,11 @@ async function copyToClipboard(text) {
 }
 
 function downloadText(filename, content) {
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
-  a.download = filename.replace(/\s+/g, '_') + '.txt';
+  a.download = filename.replace(/\s+/g, "_") + ".txt";
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -237,20 +226,29 @@ function SampleSnippet({ text, onCopy, onOpen }) {
   );
 }
 
-function LineNumbered({ text, showNumbers }) {
-  const lines = useMemo(() => text.split('\n'), [text]);
+function LineNumbered({ text, showNumbers, wrap }) {
+  const lines = useMemo(() => text.split("\n"), [text]);
+  const textClass = wrap ? "whitespace-pre-wrap break-words" : "whitespace-pre";
+
   if (!showNumbers) {
     return (
-      <pre className="whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-[#1e1b4b] selection:bg-orange-200/60">
+      <pre
+        className={`${textClass} font-mono text-sm leading-7 text-[#10152f]`}
+      >
         {text}
       </pre>
     );
   }
+
   return (
-    <ol className="list-decimal pl-8 marker:text-[#ff7200] space-y-0">
-      {lines.map((ln, i) => (
-        <li key={i} className="pl-2">
-          <code className="font-mono text-sm text-[#1e1b4b] break-words">{ln || '\u00A0'}</code>
+    <ol className="list-decimal pl-8 marker:text-[#b84300]">
+      {lines.map((line, index) => (
+        <li key={index} className="pl-2">
+          <code
+            className={`${textClass} block font-mono text-sm leading-7 text-[#10152f]`}
+          >
+            {line || "\u00A0"}
+          </code>
         </li>
       ))}
     </ol>
@@ -262,205 +260,220 @@ function LineNumbered({ text, showNumbers }) {
 const DataCaptureGrid = () => {
   const [selectedSample, setSelectedSample] = useState(null);
   const [showSamples, setShowSamples] = useState(false);
-
-  // Modal view settings
   const [wrap, setWrap] = useState(true);
   const [lineNumbers, setLineNumbers] = useState(false);
+  const [feedback, setFeedback] = useState("");
 
-  // Action feedback (aria-live)
-  const { copied, setCopied } = useCopyFeedback();
-
-  // Scroll lock while modal open
   useEffect(() => {
-    document.body.style.overflow = selectedSample ? 'hidden' : '';
+    if (!feedback) return;
+    const timer = setTimeout(() => setFeedback(""), 2500);
+    return () => clearTimeout(timer);
+  }, [feedback]);
+
+  useEffect(() => {
+    if (!selectedSample) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
     };
   }, [selectedSample]);
 
-  const onCopyInline = async (text) => {
-    const ok = await copyToClipboard(text);
-    if (ok) setCopied(true);
+  const openSample = (mode) => {
+    setWrap(true);
+    setLineNumbers(false);
+    setFeedback("");
+    setSelectedSample(mode);
   };
 
-  const onCopyFull = async () => {
-    if (!selectedSample) return;
-    const ok = await copyToClipboard(selectedSample.fullSample);
-    if (ok) setCopied(true);
-  };
-
-  const onDownloadFull = () => {
-    if (!selectedSample) return;
-    downloadText(selectedSample.title, selectedSample.fullSample);
-    setCopied(true); // reuse live region to announce action
+  const copySample = async (text) => {
+    const success = await copyToClipboard(text);
+    setFeedback(
+      success
+        ? "Sample copied to clipboard."
+        : "Copy failed. Please select and copy the text manually.",
+    );
   };
 
   return (
     <section
       id="data-entry-capture"
-      aria-label="Data Entry & Capture"
-      className="bg-[#fefefe] text-[#1e1b4b] py-16 sm:py-20 px-4 sm:px-6 md:px-12 lg:px-24"
+      aria-labelledby="capture-heading"
+      className="sw-services"
     >
-      {/* Screen-reader live region for copy/download announcements */}
-      <span className="sr-only" role="status" aria-live="polite">
-        {copied ? 'Content copied or downloaded.' : ''}
-      </span>
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:py-24">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+          <div>
+            <p className="mb-4 text-xs font-bold tracking-[0.2em] text-[#b84300] uppercase">
+              01 / Data capture
+            </p>
+            <h2
+              id="capture-heading"
+              className="text-4xl leading-tight font-extrabold tracking-[-0.04em] text-[#10152f] sm:text-5xl"
+            >
+              Start with information.
+              <br />
+              <span className="text-[#b84300]">Build useful records.</span>
+            </h2>
+          </div>
 
-      <div className="mx-auto max-w-6xl">
-        <h2
-          className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center leading-tight mb-6"
-          aria-describedby="data-entry-capture-desc"
-        >
-          Data Capture — Simple, Clear, and Built to Help You Work Better
-        </h2>
+          <div className="lg:pt-8">
+            <p className="text-base leading-8 text-slate-600">
+              Data capture brings information from documents, forms, and
+              spreadsheets into a consistent structure. We discuss your sources,
+              required fields, and output format before work begins.
+            </p>
+            <p className="mt-4 text-sm leading-7 text-slate-500">
+              Explore the examples below to see different ways information can
+              be organized. Samples are illustrative.
+            </p>
+          </div>
+        </div>
 
-        {/* Optional samples toggle */}
-        <div className="flex items-center justify-center mb-8">
-          <label className="inline-flex items-center gap-2 text-sm sm:text-base">
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-5">
+          <p className="text-sm font-semibold text-[#10152f]">
+            Explore capture approaches
+          </p>
+
+          <label className="inline-flex cursor-pointer items-center gap-3 rounded-full border border-orange-200 bg-white px-4 py-3 text-sm font-semibold text-[#10152f]">
             <input
               type="checkbox"
               checked={showSamples}
-              onChange={(e) => setShowSamples(e.target.checked)}
-              className="h-4 w-4 accent-[#ff7200]"
+              onChange={(event) => setShowSamples(event.target.checked)}
               aria-controls="capture-modes-grid"
+              className="h-4 w-4 accent-[#b84300]"
             />
-            <span className="text-[#332E81]">Show sample snippets</span>
+            Show sample snippets
           </label>
         </div>
 
-        <div
-          id="data-entry-capture-desc"
-          className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 mb-10 text-[#332E81] text-base leading-relaxed"
-        >
-          <div>
-            <h3 className="text-lg sm:text-xl font-bold mb-3 text-[#1e1b4b]">What Is Data Capture?</h3>
-            <p className="mb-4">
-              Data capture is the process of collecting, structuring, and validating information from
-              users, documents, or systems. It powers operations, insights, and accountability.
-            </p>
-            <p>
-              At Stonewall, we treat data entry as a choreography — every field, label, and interaction
-              is designed to guide, reassure, and empower. Whether it’s OCR or form logic, our systems
-              are modular and expressive.
-            </p>
-          </div>
+        <p role="status" className="mt-3 min-h-6 text-sm text-[#b84300]">
+          {feedback}
+        </p>
 
-          <div>
-            <h3 className="text-lg sm:text-xl font-bold mb-3 text-[#1e1b4b]">Why It Matters</h3>
-            <p className="mb-4">
-              Clean, intentional data entry fuels transparency, automation, and collaboration. It’s
-              the backbone of scheduling, reporting, and service delivery.
-            </p>
-            <p>
-              Our capture modes adapt to your workflow — from timestamped cleaning logs to spreadsheet
-              imports and branded validation. Every interaction is designed for clarity, speed, and trust.
-            </p>
-          </div>
-        </div>
-
-        {/* Modes grid */}
         <div
           id="capture-modes-grid"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 mb-14"
-          role="list"
-          aria-label="Data capture modes"
+          className="mt-5 grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
-          {dataCaptureModes.map(({ title, description, sample, fullSample, icon: Icon }) => (
-            <article
-              key={title}
-              role="listitem"
-              className="rounded-xl p-6 shadow-md bg-gradient-to-br from-[#f2f2f2] to-[#e6ebf4]
-                         hover:shadow-lg transition duration-300 motion-reduce:transition-none"
-            >
-              <div className="flex items-start gap-3">
-                <div
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-100"
+          {dataCaptureModes.map((mode, index) => (
+            <article key={mode.title} className="sw-capture-card">
+              <div className="flex items-start justify-between gap-4">
+                <span className="sw-service-icon">
+                  {React.createElement(mode.icon, {
+                    size: 25,
+                    "aria-hidden": true,
+                  })}
+                </span>
+                <span
                   aria-hidden="true"
+                  className="text-xs font-semibold text-slate-400"
                 >
-                  <Icon className="w-5 h-5 text-[#ff7200]" aria-hidden="true" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-[#1e1b4b]">{title}</h3>
-                  <p className="mt-1 text-sm text-[#332E81]">{description}</p>
-                </div>
+                  / {String(index + 1).padStart(2, "0")}
+                </span>
               </div>
 
-              {/* Optional inline snippet */}
+              <h3 className="mt-6 text-xl font-bold tracking-tight text-[#10152f]">
+                {mode.title}
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-slate-600">
+                {mode.description}
+              </p>
+
               {showSamples && (
                 <SampleSnippet
-                  text={sample}
-                  onCopy={() => onCopyInline(sample)}
-                  onOpen={() => {
-                    setSelectedSample({ title, fullSample });
-                    // Reset modal toolbar toggles for a fresh view per open
-                    setWrap(true);
-                    setLineNumbers(false);
-                  }}
+                  text={mode.sample}
+                  onCopy={() => copySample(mode.sample)}
+                  onOpen={() => openSample(mode)}
                 />
               )}
+
+              <div className="mt-auto pt-6">
+                <button
+                  type="button"
+                  onClick={() => openSample(mode)}
+                  aria-haspopup="dialog"
+                  className="sw-sample-action"
+                >
+                  View full sample
+                  <ExternalLink size={16} aria-hidden="true" />
+                  <span className="sr-only">: {mode.title}</span>
+                </button>
+              </div>
             </article>
           ))}
         </div>
 
-        {/* Modal — full sample with toolbar */}
         {selectedSample && (
           <div
-            className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-[#1e1b4b]/30 backdrop-blur-sm"
-            onClick={(e) => {
-              if (e.currentTarget === e.target) setSelectedSample(null);
+            className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-[#0b1024]/65 px-4 py-6 backdrop-blur-sm sm:py-12"
+            onClick={(event) => {
+              if (event.target === event.currentTarget) {
+                setSelectedSample(null);
+              }
             }}
           >
-            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-3xl">
+            <div className="w-full max-w-3xl">
               <AccessibleModal
                 title={`${selectedSample.title} — Full Sample`}
-                description="Scrollable text; use toolbar to copy, download, toggle wrap and line numbers."
+                description="Illustrative sample. Copy or download the text, or adjust its display."
                 onClose={() => setSelectedSample(null)}
               >
-                {/* Toolbar */}
-                <div className="mb-3 flex flex-wrap items-center gap-2">
+                <div className="mb-4 flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={onCopyFull}
-                    className="inline-flex items-center gap-2 rounded-md border border-orange-200 bg-orange-50 px-3 py-1.5 text-sm font-medium text-[#ff7200] hover:bg-orange-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
+                    onClick={() => copySample(selectedSample.fullSample)}
+                    className="sw-sample-action"
                   >
-                    <CopyIcon className="h-4 w-4" aria-hidden="true" /> Copy
+                    <CopyIcon size={16} aria-hidden="true" />
+                    Copy
                   </button>
+
                   <button
                     type="button"
-                    onClick={onDownloadFull}
-                    className="inline-flex items-center gap-2 rounded-md border border-orange-200 bg-orange-50 px-3 py-1.5 text-sm font-medium text-[#ff7200] hover:bg-orange-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
+                    onClick={() => {
+                      downloadText(
+                        selectedSample.title,
+                        selectedSample.fullSample,
+                      );
+                      setFeedback("Sample text download started.");
+                    }}
+                    className="sw-sample-action"
                   >
-                    <DownloadIcon className="h-4 w-4" aria-hidden="true" /> Download .txt
+                    <DownloadIcon size={16} aria-hidden="true" />
+                    Download .txt
                   </button>
+
                   <button
                     type="button"
-                    onClick={() => setWrap((v) => !v)}
+                    onClick={() => setWrap((current) => !current)}
                     aria-pressed={wrap}
-                    className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-[#1e1b4b] hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
+                    className="sw-sample-action"
                   >
-                    <WrapIcon className="h-4 w-4" aria-hidden="true" />
-                    {wrap ? 'Disable wrap' : 'Enable wrap'}
+                    <WrapIcon size={16} aria-hidden="true" />
+                    Wrap text
                   </button>
+
                   <button
                     type="button"
-                    onClick={() => setLineNumbers((v) => !v)}
+                    onClick={() => setLineNumbers((current) => !current)}
                     aria-pressed={lineNumbers}
-                    className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-[#1e1b4b] hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
+                    className="sw-sample-action"
                   >
-                    <ListIcon className="h-4 w-4" aria-hidden="true" />
-                    {lineNumbers ? 'Hide line numbers' : 'Show line numbers'}
+                    <ListIcon size={16} aria-hidden="true" />
+                    Line numbers
                   </button>
                 </div>
 
-                {/* Full sample viewer */}
-                <div
-                  className={`max-h-[70vh] overflow-auto rounded-lg border ${
-                    wrap ? 'border-gray-100' : 'border-gray-200'
-                  } bg-white p-4`}
-                >
-                  <div className={wrap ? 'whitespace-pre-wrap break-words' : 'whitespace-pre overflow-x-auto'}>
-                    <LineNumbered text={selectedSample.fullSample} showNumbers={lineNumbers} />
-                  </div>
+                <p role="status" className="mb-3 text-sm text-[#b84300]">
+                  {feedback}
+                </p>
+
+                <div className="max-h-[50dvh] overflow-auto rounded-xl border border-slate-200 bg-[#faf8f5] p-4 sm:p-6">
+                  <LineNumbered
+                    text={selectedSample.fullSample}
+                    showNumbers={lineNumbers}
+                    wrap={wrap}
+                  />
                 </div>
               </AccessibleModal>
             </div>

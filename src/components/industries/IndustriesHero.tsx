@@ -1,47 +1,65 @@
-
-import React from 'react';
+import { Link } from "react-router-dom";
+import { ArrowRight, Network } from "lucide-react";
 
 const IndustriesHero = () => {
   return (
-    <section
-      aria-labelledby="industries-hero-title"
-      
-className="
-  relative
-  bg-gradient-to-br from-[#6750c5] via-[#4b422d] to-[#2d533d]
-  text-[#332E81]
-  dark:from-[#1a1a2e] dark:via-[#16213e] dark:to-[#0f3460]
-  shadow-xl overflow-hidden
-"
+    <section aria-labelledby="industries-hero-title" className="sw-hero">
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 sm:px-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16 lg:py-24">
+        <div>
+          <p className="mb-5 text-xs font-bold tracking-[0.2em] text-orange-300 uppercase">
+            Industries we serve
+          </p>
 
-    >
-      {/* Decorative background element */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-[url('/patterns/hero-bg.svg')] opacity-10"
-      ></div>
+          <h1
+            id="industries-hero-title"
+            className="text-5xl leading-[1.1] font-extrabold tracking-[-0.05em] text-white sm:text-6xl"
+          >
+            Your sector.
+            <br />
+            Your information.
+            <br />
+            <span className="sw-gradient-text">A clearer approach.</span>
+          </h1>
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center relative z-10">
-        {/* Heading */}
-        <h1
-          id="industries-hero-title"
-          className="
-            text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight
-            bg-gradient-to-r from-white via-yellow-100 to-orange-200
-            text-transparent bg-clip-text
-            mb-6
-          "
-        >
-          Industries We Empower <br /> Services Designed for Every Sector
-        </h1>
+          <p className="mt-7 max-w-xl text-base leading-8 text-slate-300 sm:text-lg">
+            From patient records to product catalogues, every sector works with
+            different information. We adapt our data capture, cleaning, and
+            transcription services to your requirements.
+          </p>
 
-        {/* Description */}
-        <p className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto mb-8 leading-relaxed text-white/90">
-          From healthcare to field operations, our transcription, data entry, and data cleaning services adapt to your workflow. We choreograph clarity, accountability, and scale.
-        </p>
+          <Link to="/contact" className="sw-button sw-button-primary mt-8">
+            Discuss your industry
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
 
-        {/* Divider */}
-        <div className="h-[4px] w-32 mx-auto bg-white rounded-full shadow-md"></div>
+        <div className="sw-about-statement">
+          <span className="inline-flex rounded-2xl border border-orange-300/25 bg-orange-400/10 p-4">
+            <Network size={34} className="text-orange-300" aria-hidden="true" />
+          </span>
+
+          <h2 className="mt-7 text-2xl leading-snug font-bold tracking-tight text-white sm:text-3xl">
+            Different workflows.
+            <br />
+            <span className="text-orange-300">Shared need for clarity.</span>
+          </h2>
+
+          <p className="mt-5 text-sm leading-7 text-slate-300">
+            The right structure starts with understanding how your team
+            collects, manages, and uses its information.
+          </p>
+
+          <ul className="mt-7 flex flex-wrap gap-2 border-t border-white/15 pt-6">
+            {["Capture", "Clean", "Transcribe"].map((service) => (
+              <li
+                key={service}
+                className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200"
+              >
+                {service}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

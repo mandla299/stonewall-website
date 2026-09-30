@@ -1,44 +1,97 @@
+import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
+import {
+  ArrowRight,
+  ArrowDown,
+  FileInput,
+  AudioLines,
+  Sparkles,
+} from "lucide-react";
 
-import React from 'react';
+const serviceLinks = [
+  {
+    label: "Data capture",
+    to: "/services#data-entry-capture",
+    icon: <FileInput size={22} aria-hidden="true" />,
+    description: "From scattered records to structured information.",
+  },
+  {
+    label: "Transcription",
+    to: "/services#transcription-services",
+    icon: <AudioLines size={22} aria-hidden="true" />,
+    description: "From spoken conversations to readable records.",
+  },
+  {
+    label: "Data cleaning",
+    to: "/services#data-cleaning",
+    icon: <Sparkles size={22} aria-hidden="true" />,
+    description: "From inconsistent datasets to clearer inputs.",
+  },
+];
 
 const ServicesHero = () => {
   return (
     <section
       id="services-hero"
-      aria-label="Stonewall Data Solutions services overview"
-      className="relative bg-gradient-to-br from-[#f2f9f2] via-[#e6ebf4] to-[#bcb1b1] text-[#1e1b4b] py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden"
+      aria-labelledby="services-page-heading"
+      className="sw-hero"
     >
-      <div className="mx-auto max-w-6xl text-center">
-        <h1
-          className="text-2xl sm:text-3xl md:text-5xl font-extrabold leading-tight md:leading-snug tracking-tight mb-5"
-          aria-describedby="services-hero-desc"
-        >
-          Transcribe, Clean, Analyze, Empower
-          <br className="hidden md:block" />
-          Services That Grow With You
-        </h1>
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:py-24">
+        <div className="grid items-end gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
+          <div>
+            <p className="mb-5 text-xs font-bold tracking-[0.2em] text-orange-300 uppercase">
+              Our services
+            </p>
 
-        <p
-          id="services-hero-desc"
-          className="text-sm sm:text-base md:text-lg text-[#332E81] max-w-prose sm:max-w-3xl mx-auto mb-8 leading-relaxed"
-        >
-          From transcription to transformation, we choreograph data workflows that empower clarity,
-          fairness, and expressive insight.
-        </p>
+            <h1
+              id="services-page-heading"
+              className="text-5xl leading-[1.1] font-extrabold tracking-[-0.05em] sm:text-6xl"
+            >
+              Give your information
+              <br />
+              <span className="sw-gradient-text">a clearer direction.</span>
+            </h1>
+          </div>
 
-        <div
-          className="h-[3px] w-28 sm:w-32 mx-auto bg-gradient-to-r from-[#ff7200] to-[#be3c05]"
-          aria-hidden="true"
-        />
+          <div>
+            <p className="text-base leading-8 text-slate-300 sm:text-lg">
+              Capture what matters. Make conversations searchable. Bring
+              consistency to your records. Explore practical services shaped
+              around the information you work with.
+            </p>
+
+            <Link to="/contact" className="sw-button sw-button-primary mt-7">
+              Discuss your requirements
+              <ArrowRight size={18} aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+
+        <nav aria-label="Services on this page" className="mt-14 lg:mt-16">
+          <ul className="grid gap-4 md:grid-cols-3">
+            {serviceLinks.map((service) => (
+              <li key={service.to}>
+                <HashLink smooth to={service.to} className="sw-service-jump">
+                  <span className="sw-industry-icon">{service.icon}</span>
+
+                  <span className="mt-5 block text-lg font-bold text-white">
+                    {service.label}
+                  </span>
+
+                  <span className="mt-2 block text-sm leading-7 text-slate-300">
+                    {service.description}
+                  </span>
+
+                  <span className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-orange-300">
+                    Explore service
+                    <ArrowDown size={15} aria-hidden="true" />
+                  </span>
+                </HashLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
-
-      {/* Respect reduced motion if you add animations later */}
-      <style>{`
-        @media (prefers-reduced-motion: reduce) {
-          .motion-reduce\\:transition-none { transition: none !important; }
-          .motion-reduce\\:transform-none { transform: none !important; }
-        }
-      `}</style>
     </section>
   );
 };

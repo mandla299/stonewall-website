@@ -1,137 +1,273 @@
-
-import React, { useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  CircleAlert,
+  LoaderCircle,
+  Send,
+} from "lucide-react";
 
 const ContactForm = () => {
-  const [status, setStatus] = useState<"success" | "error" | null>(null); // 'success' | 'error' | null
+  const [status, setStatus] = useState<"success" | "error" | null>(null);
   const [loading, setLoading] = useState(false);
+  const submitting = useRef(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);       
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (submitting.current) return;
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    formData.append("access_key", "7ba282f6-69cf-4a6d-9736-1689d8317623");
+    formData.append(
+      "subject",
+      "New Message from Stonewall Data Solutions Website",
+    );
+    formData.append("from_name", "Stonewall Website Contact Form");
+
+    submitting.current = true;
+    setLoading(true);
     setStatus(null);
 
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    formData.append("access_key", "7ba282f6-69cf-4a6d-9736-1689d8317623");
-    formData.append("subject", "New Message from Stonewall Data Solutions Website");
-    formData.append("from_name", "Your Website Contact Form");
-
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         body: formData,
       });
-      const data = await res.json();
 
-      if (data.success) {
-        setStatus("success");
-        form.reset();
-      } else {
-        setStatus("error");
+      const data = await response.json();
+
+      if (!response.ok || data.success !== true) {
+        throw new Error("Submission failed");
       }
-    } catch (err) {
+
+      form.reset();
+      setStatus("success");
+    } catch {
       setStatus("error");
     } finally {
+      submitting.current = false;
       setLoading(false);
     }
   };
 
   return (
-    <section className="bg-gradient-to-br from-[#f3f0ff] via-[#fef6e4] to-[#eafaf1] py-20 px-6 md:px-12 lg:px-24">
-      <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-xl p-10">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center text-[#332E81]">
-          Send Us a Message
-        </h2>
+    <section
+      aria-labelledby="enquiry-form-title"
+      className="sw-contact-form relative overflow-hidden rounded-[2rem] border border-white bg-white p-6 sm:p-8 lg:p-10"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-orange-100/60 blur-3xl"
+      />
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Honeypot */}
-          <input type="checkbox" name="botcheck" className="hidden" />
+      <div className="relative">
+        <div className="mb-7 flex items-start justify-between gap-4">
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#b84900]">
+              Let’s get started
+            </p>
 
-          {/* Left Column */}
-          <div className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-semibold mb-2 text-[#332E81] ">Full Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                placeholder="Your full name"
-                className="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff7200] bg-[#d8d7e2]"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold mb-2 text-[#332E81]">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                placeholder="you@example.com"
-                className="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff7200] bg-[#d8d7e2]"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="interest" className="block text-sm font-semibold mb-2 text-[#332E81]">Service Interest</label>
-              <select
-                id="interest"
-                name="interest"
-                required
-                className="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff7200] bg-[#d8d7e2]"
-              >
-                <option value="">Select a service</option>
-                <option value="Transcription">Transcription</option>
-                <option value="Data Entry">Data Entry</option>
-                <option value="Data Cleaning">Data Cleaning</option>
-                <option value="Survey Capture">Survey Capture</option>
-                <option value="Sanitation Logging">Sanitation Logging</option>
-                <option value="Custom Workflow">Custom Workflow</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-6">
-            <div>
-              <label htmlFor="message" className="block text-sm font-semibold mb-2 text-[#332E81]">Message</label>
-              <textarea
-                id="message"
-                name="message"
-                rows={9.5}
-                required
-                placeholder="Tell us what you need, or ask a question..."
-                className="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#ff7200] bg-[#d8d7e2]"
-              />
-            </div>
-          </div>
-
-          {/* Submit */}
-          <div className="md:col-span-2 mt-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full text-white font-semibold px-6 py-4 rounded-full transition duration-300 ${
-                loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#ff7200] hover:bg-[#e65f00]"
-              }`}
+            <h2
+              id="enquiry-form-title"
+              className="text-2xl font-extrabold tracking-tight text-[#10152f] sm:text-3xl"
             >
-              {loading ? "Sending..." : "Send Message"}
-            </button>
+              Your next step starts here.
+            </h2>
           </div>
+
+          <span
+            aria-hidden="true"
+            className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-50 text-[#c65300] sm:inline-flex"
+          >
+            <Send size={21} />
+          </span>
+        </div>
+
+        <p className="mb-8 max-w-xl text-sm leading-7 text-slate-600">
+          Tell us a little about your project. We’ll use these details to
+          understand your needs and discuss a suitable approach.
+        </p>
+
+        <form onSubmit={handleSubmit} aria-busy={loading}>
+          <input
+            type="checkbox"
+            name="botcheck"
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
+
+          <fieldset disabled={loading} className="m-0 min-w-0 border-0 p-0">
+            <legend className="sr-only">
+              Your contact and project details
+            </legend>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="enquiry-name" className="sw-form-label">
+                  Full name <span className="text-[#b84900]">*</span>
+                </label>
+                <input
+                  id="enquiry-name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  maxLength={150}
+                  placeholder="Your full name"
+                  className="sw-form-field"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="enquiry-email" className="sw-form-label">
+                  Email address <span className="text-[#b84900]">*</span>
+                </label>
+                <input
+                  id="enquiry-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  maxLength={254}
+                  placeholder="you@company.com"
+                  className="sw-form-field"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="enquiry-interest" className="sw-form-label">
+                  How can we help? <span className="text-[#b84900]">*</span>
+                </label>
+                <select
+                  id="enquiry-interest"
+                  name="interest"
+                  defaultValue=""
+                  required
+                  className="sw-form-field"
+                >
+                  <option value="" disabled>
+                    Select a service
+                  </option>
+                  <option value="Transcription">Transcription</option>
+                  <option value="Data Entry & Capture">
+                    Data entry & capture
+                  </option>
+                  <option value="Data Cleaning">Data cleaning</option>
+                  <option value="Survey Capture">Survey capture</option>
+                  <option value="Custom Workflow">Custom workflow</option>
+                  <option value="General Enquiry">
+                    Something else / I’m not sure yet
+                  </option>
+                </select>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="enquiry-message" className="sw-form-label">
+                  Tell us about your project{" "}
+                  <span className="text-[#b84900]">*</span>
+                </label>
+                <textarea
+                  id="enquiry-message"
+                  name="message"
+                  rows={6}
+                  required
+                  maxLength={10000}
+                  aria-describedby="enquiry-message-help"
+                  placeholder="What information are you working with, and what would you like to achieve?"
+                  className="sw-form-field resize-y"
+                />
+                <p
+                  id="enquiry-message-help"
+                  className="mt-2 text-xs leading-6 text-slate-500"
+                >
+                  Include an approximate volume and deadline if you have them.
+                  Please leave out confidential records or sensitive personal
+                  information.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-7">
+              <button
+                type="submit"
+                disabled={loading}
+                className="sw-form-submit flex w-full items-center justify-center gap-3 rounded-2xl px-6 py-4 text-sm font-bold text-white"
+              >
+                {loading ? (
+                  <>
+                    <LoaderCircle
+                      size={19}
+                      aria-hidden="true"
+                      className="animate-spin motion-reduce:animate-none"
+                    />
+                    Sending your message…
+                  </>
+                ) : (
+                  <>
+                    Send message
+                    <ArrowUpRight size={20} aria-hidden="true" />
+                  </>
+                )}
+              </button>
+
+              <p className="mt-4 text-center text-xs leading-6 text-slate-500">
+                Fields marked * are required. Read our{" "}
+                <a
+                  href="/privacy-policy"
+                  className="rounded font-semibold text-[#10152f] underline underline-offset-4 hover:text-[#b84900]"
+                >
+                  Privacy Policy
+                </a>{" "}
+                for information about how we handle your details.
+              </p>
+            </div>
+          </fieldset>
         </form>
 
-        {/* Inline status message */}
-        {status === "success" && (
-          <div className="mt-6 rounded-lg bg-green-50 border border-green-200 p-4 text-green-700">
-            ✅ Thanks! Your message has been sent.
-          </div>
-        )}
-        {status === "error" && (
-          <div className="mt-6 rounded-lg bg-red-50 border border-red-200 p-4 text-red-700">
-            ❌ Sorry, something went wrong. Please try again later.
-          </div>
-        )}
+        <div role="status" aria-live="polite" aria-atomic="true">
+          {status === "success" && (
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">
+              <CheckCircle2
+                size={21}
+                aria-hidden="true"
+                className="mt-0.5 shrink-0"
+              />
+              <p>
+                <strong className="block">Message sent.</strong>
+                Thank you for getting in touch. We’ll respond using the email
+                address you provided.
+              </p>
+            </div>
+          )}
+
+          {status === "error" && (
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-900">
+              <CircleAlert
+                size={21}
+                aria-hidden="true"
+                className="mt-0.5 shrink-0"
+              />
+              <p>
+                <strong className="block">
+                  We couldn’t confirm your message was sent.
+                </strong>
+                Your details are still in the form. Please try again, or email{" "}
+                <a
+                  href="mailto:mandla@swdatasolutions.com"
+                  className="break-all font-semibold underline underline-offset-4"
+                >
+                  mandla@swdatasolutions.com
+                </a>
+                .
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

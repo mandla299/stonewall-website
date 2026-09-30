@@ -1,23 +1,21 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Volume2,
   FileText,
   Users,
   LayoutList,
   ExternalLink,
-} from 'lucide-react';
+} from "lucide-react";
 
 // Use your shared accessible modal
-import AccessibleModal from '../modals/AccessibleModal';
+import AccessibleModal from "../modals/AccessibleModal";
 
 const transcriptionTypes = [
   {
-    title: 'Verbatim Transcription',
+    title: "Verbatim Transcription",
     description:
-      'Captures every word, pause, and utterance exactly as spoken. Ideal for legal proceedings, disciplinary hearings, and academic research.',
-    sample:
-      `"Um, yeah... I mean, I—I wasn't really sure what to do at that point, you know? [pause] So I just waited."`,
+      "Captures every word, pause, and utterance exactly as spoken. Ideal for legal proceedings, disciplinary hearings, and academic research.",
+    sample: `"Um, yeah... I mean, I—I wasn't really sure what to do at that point, you know? [pause] So I just waited."`,
     fullSample: `Verbatim Transcript — A4 Format
 
 [Start of Transcript]
@@ -71,9 +69,9 @@ Interviewee: Yeah, no problem. I just hope it helps someone else avoid that kind
     icon: FileText,
   },
   {
-    title: 'Edited Transcription',
+    title: "Edited Transcription",
     description:
-      'Cleans up filler words and false starts for readability. Commonly used for podcasts, interviews, and published articles.',
+      "Cleans up filler words and false starts for readability. Commonly used for podcasts, interviews, and published articles.",
     sample: `"I wasn’t sure what to do at that point, so I waited."`,
     fullSample: `Edited Transcript — A4 Format
 
@@ -124,11 +122,10 @@ Interviewee: I’m glad to share. Hopefully it helps improve the process for oth
     icon: Volume2,
   },
   {
-    title: 'Speaker Attribution',
+    title: "Speaker Attribution",
     description:
-      'Assigns speakers with color-coded labels and structures dialogue for clarity. Essential for multi-voice recordings like panel discussions or team meetings.',
-    sample:
-      `Speaker 1: I think we should revisit the proposal.\nSpeaker 2: Agreed. Let’s schedule a follow-up by Friday.`,
+      "Assigns speakers with color-coded labels and structures dialogue for clarity. Essential for multi-voice recordings like panel discussions or team meetings.",
+    sample: `Speaker 1: I think we should revisit the proposal.\nSpeaker 2: Agreed. Let’s schedule a follow-up by Friday.`,
     fullSample: `Speaker Attribution — A4 Format
 
 [Start of Transcript]
@@ -170,9 +167,9 @@ Speaker 1 [Blue]: Thanks, team. Let’s aim for clarity and conciseness this tim
     icon: Users,
   },
   {
-    title: 'Timestamped Transcription',
+    title: "Timestamped Transcription",
     description:
-      'Anchors each segment with time markers for syncing and reference. Useful for video editing, accessibility, and review workflows.',
+      "Anchors each segment with time markers for syncing and reference. Useful for video editing, accessibility, and review workflows.",
     sample: `[00:02:15] I wasn’t sure what to do at that point, so I waited.`,
     fullSample: `Timestamped Transcript — A4 Format
 
@@ -227,58 +224,35 @@ Speaker 1 [Blue]: Thanks, team. Let’s aim for clarity and conciseness this tim
     icon: LayoutList,
   },
   {
-    title: 'Fast & Accurate Delivery',
+    title: "Delivery Planning",
     description:
-      'Optimized workflows ensure rapid turnaround without compromising quality. Perfect for time-sensitive projects and daily operations.',
-    sample:
-      `"We received the transcript within two hours — every detail was spot-on, even the speaker shifts."`,
-    fullSample: `Delivery Transcript — A4 Format
+      "Agree on transcript style, output format, and delivery requirements before work begins. Timing depends on recording length, audio quality, and scope.",
+    sample: `Style: Edited transcript
+Speakers: Labelled
+Timestamps: Required
+Delivery date: To be agreed`,
+    fullSample: `Illustrative Delivery Checklist
 
-[Start of Transcript]
+Recording length: To be confirmed
+Audio quality: To be reviewed
+Transcript style: Edited
+Speaker labels: Required
+Timestamp interval: To be agreed
+Output format: To be agreed
+Delivery date: To be agreed
 
-Client Feedback:
-"We received the transcript within two hours — every detail was spot-on, even the speaker shifts. The formatting was clean, timestamps were accurate, and the delivery was seamless."
+Review notes:
+- Confirm spelling of names and specialist terms.
+- Mark unclear audio for review.
+- Confirm any formatting requirements.
 
-Transcript Summary:
-- Turnaround Time: 2 hours
-- Accuracy: 99.8%
-- Format: Edited with speaker attribution
-- Timestamping: Included
-- Delivery Method: Secure download link
-- File Type: PDF + SRT
-- Review Status: Approved by client
-- Notes: No revisions requested
-
-Transcript Excerpt:
-
-Speaker 1: Good morning, everyone. Let’s begin with a review of last quarter’s performance. Overall, we saw a 12% increase in engagement across three regions.
-
-Speaker 2: That’s right. Gauteng, Western Cape, and KwaZulu-Natal exceeded expectations. However, Limpopo and Free State lagged behind, primarily due to delayed campaign rollouts.
-
-Speaker 3: I’ve flagged those delays in the operations dashboard. We’ll need to revisit the rollout calendar and adjust for seasonal shifts.
-
-Speaker 1: Agreed. Let’s also look at the feedback from field agents. There were several notes about unclear messaging and inconsistent handoff protocols.
-
-Speaker 2: I’ve compiled those into a summary document. We can address them in the next training module.
-
-Speaker 3: On the budget side, we’re still under the projected spend, which gives us room to scale the pilot in Mpumalanga.
-
-Speaker 1: Excellent. Let’s finalize the proposal by Thursday and circulate it for review.
-
-Speaker 2: I’ll handle the formatting and attribution. Do we want timestamps embedded or separate?
-
-Speaker 3: Embedded, please. It’s easier for syncing with the video archive.
-
-Speaker 1: Perfect. Thanks, team. Let’s keep the momentum going.
-
-[End of Transcript]
-`,
-    icon: Volume2,
+This is an example checklist, not a delivery guarantee.`,
+    icon: LayoutList,
   },
   {
-    title: 'Custom Formatting',
+    title: "Custom Formatting",
     description:
-      'Transcripts styled for subtitles, reports, or accessibility. Examples include SRT files, bullet-point summaries, and branded layouts.',
+      "Transcripts styled for subtitles, reports, or accessibility. Examples include SRT files, bullet-point summaries, and branded layouts.",
     sample: `1
 00:02:15,000 --> 00:02:18,000
 I wasn’t sure what to do at that point, so I waited.`,
@@ -374,98 +348,145 @@ I’m glad to share. Hopefully it helps someone else.
 
 const TranscriptionGrid = () => {
   const [selectedSample, setSelectedSample] = useState(null);
-  const [showSamples, setShowSamples] = useState(false); // Optional samples toggle
+  const [showSamples, setShowSamples] = useState(false);
 
-  // Lock body scroll when modal is open
   useEffect(() => {
-    document.body.style.overflow = selectedSample ? 'hidden' : '';
+    if (!selectedSample) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
     };
   }, [selectedSample]);
 
   return (
     <section
       id="transcription-services"
-      aria-label="Transcription Services"
-      className="bg-[#f9f9f9] text-[#1e1b4b] py-16 sm:py-20 px-4 sm:px-6 md:px-12 lg:px-24"
+      aria-labelledby="transcription-heading"
+      className="sw-industries"
     >
-      <div className="mx-auto max-w-6xl">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center leading-tight mb-6">
-          Transcription Services. Fast, Accurate, Human-Centered
-        </h2>
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:py-24">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+          <div>
+            <p className="mb-4 text-xs font-bold tracking-[0.2em] text-orange-300 uppercase">
+              02 / Transcription
+            </p>
 
-        {/* Optional samples toggle */}
-        <div className="flex items-center justify-center mb-10">
-          <label className="inline-flex items-center gap-2 text-sm sm:text-base">
+            <h2
+              id="transcription-heading"
+              className="text-4xl leading-tight font-extrabold tracking-[-0.04em] text-white sm:text-5xl"
+            >
+              Keep the conversation.
+              <br />
+              <span className="sw-gradient-text">Make it searchable.</span>
+            </h2>
+          </div>
+
+          <div className="lg:pt-8">
+            <p className="text-base leading-8 text-slate-300">
+              Turn audio and video into written records you can revisit,
+              reference, and share. Choose the transcript style and formatting
+              that suit your project.
+            </p>
+
+            <p className="mt-4 text-sm leading-7 text-slate-400">
+              Recording quality, speaker overlap, and specialist terminology
+              affect the work involved. We discuss these requirements before
+              agreeing on delivery.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-y border-white/15 py-5">
+          <p className="text-sm font-semibold text-white">
+            Different conversations. Useful written records.
+          </p>
+
+          <label className="inline-flex cursor-pointer items-center gap-3 rounded-full border border-white/20 bg-white/5 px-4 py-3 text-sm font-semibold text-white">
             <input
               type="checkbox"
               checked={showSamples}
-              onChange={(e) => setShowSamples(e.target.checked)}
-              className="h-4 w-4 accent-[#ff7200]"
+              onChange={(event) => setShowSamples(event.target.checked)}
               aria-controls="transcription-grid"
+              className="h-4 w-4 accent-orange-400"
             />
-            <span className="text-[#332E81]">Show sample snippets</span>
+            Show sample snippets
           </label>
         </div>
 
+        <p className="mt-5 text-xs leading-6 text-slate-400">
+          All previews are illustrative examples.
+        </p>
+
         <div
           id="transcription-grid"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 mb-14"
-          role="list"
-          aria-label="Transcription types"
+          className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
-          {transcriptionTypes.map(({ title, description, sample, fullSample, icon: Icon }) => (
-            <article
-              key={title}
-              role="listitem"
-              className="bg-gradient-to-br from-[#f2f2f2] to-[#e6ebf4] rounded-xl p-6 shadow-md hover:shadow-lg transition duration-300 motion-reduce:transition-none"
-            >
-              <Icon className="w-7 h-7 text-[#ff7200] mb-4" aria-hidden="true" />
-              <h3 className="text-lg font-bold mb-2">{title}</h3>
-              <p className="text-sm text-[#332E81]">{description}</p>
+          {transcriptionTypes.map((type) => (
+            <article key={type.title} className="sw-transcript-card">
+              <span className="sw-industry-icon">
+                {React.createElement(type.icon, {
+                  size: 24,
+                  "aria-hidden": true,
+                })}
+              </span>
 
-              {/* Optional sample and modal trigger */}
+              <h3 className="mt-6 text-xl font-bold tracking-tight text-white">
+                {type.title}
+              </h3>
+
+              <p className="mt-4 text-sm leading-7 text-slate-300">
+                {type.description}
+              </p>
+
               {showSamples && (
-                <>
-                  <p className="mt-3 text-sm italic text-[#1e1b4b] whitespace-pre-line">
-                    Sample: {sample}
+                <div className="mt-5 rounded-xl border border-white/10 bg-[#0b1024]/35 p-4">
+                  <p className="mb-3 text-xs font-bold tracking-wider text-orange-300 uppercase">
+                    Sample excerpt
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedSample({ title, fullSample })}
-                    className="mt-4 inline-flex items-center text-sm font-medium text-[#ff7200] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200] rounded-md px-1"
-                    aria-label={`View full sample for ${title}`}
-                  >
-                    <ExternalLink className="w-4 h-4 mr-1" aria-hidden="true" />
-                    View Full Sample
-                  </button>
-                </>
+                  <pre className="max-h-40 overflow-auto whitespace-pre-wrap break-words font-mono text-xs leading-6 text-slate-300">
+                    {type.sample}
+                  </pre>
+                </div>
               )}
+
+              <div className="mt-auto pt-6">
+                <button
+                  type="button"
+                  onClick={() => setSelectedSample(type)}
+                  aria-haspopup="dialog"
+                  className="sw-transcript-action"
+                >
+                  View full sample
+                  <ExternalLink size={16} aria-hidden="true" />
+                  <span className="sr-only">: {type.title}</span>
+                </button>
+              </div>
             </article>
           ))}
         </div>
 
-        {/* Modal — backdrop + AccessibleModal content */}
         {selectedSample && (
           <div
-            className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-[#1e1b4b]/30 backdrop-blur-sm"
-            onClick={(e) => {
-              if (e.currentTarget === e.target) setSelectedSample(null); // close on backdrop click
+            className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-[#0b1024]/65 px-4 py-6 backdrop-blur-sm sm:py-12"
+            onClick={(event) => {
+              if (event.target === event.currentTarget) {
+                setSelectedSample(null);
+              }
             }}
           >
-            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-3xl">
+            <div className="w-full max-w-3xl">
               <AccessibleModal
                 title={`${selectedSample.title} — Full Sample`}
-                description="A4-style preview; scroll to view content."
+                description="Illustrative transcript example. Scroll to read the full text."
                 onClose={() => setSelectedSample(null)}
               >
-                <div className="rounded-lg border border-gray-100 bg-white p-4">
-                  <div className="max-h-[70vh] overflow-auto">
-                    <pre className="whitespace-pre-wrap text-sm text-[#332E81] leading-relaxed font-mono">
-                      {selectedSample.fullSample}
-                    </pre>
-                  </div>
+                <div className="max-h-[50dvh] overflow-auto rounded-xl border border-slate-200 bg-[#faf8f5] p-4 sm:p-6">
+                  <pre className="whitespace-pre-wrap break-words font-mono text-sm leading-7 text-[#10152f]">
+                    {selectedSample.fullSample}
+                  </pre>
                 </div>
               </AccessibleModal>
             </div>
