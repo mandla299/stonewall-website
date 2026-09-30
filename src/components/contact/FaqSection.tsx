@@ -1,120 +1,178 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import { ArrowUpRight, MessageCircle, Plus } from "lucide-react";
 
 const faqs = [
   {
-    question: 'What types of workflows can you digitize?',
+    question: "What services do you provide?",
     answer:
-      'We specialize in digitizing surveys, sanitation logs, transcription flows, and custom data entry forms—tailored to your industry’s needs.',
+      "We help with data entry and capture, data cleaning, and transcription. Tell us what information you’re working with and the result you need, and we’ll discuss a suitable approach.",
   },
   {
-    question: 'Do you support offline data capture?',
+    question: "Can you work with my existing documents?",
     answer:
-      'Yes. Our mobile-ready forms are designed for field teams working in low-connectivity environments, with sync-on-return capabilities.',
+      "We can assess spreadsheets, PDFs, scanned documents, and other source material. Share a description through the enquiry form first, and we’ll discuss suitable formats and how to transfer files.",
   },
   {
-    question: 'Can I upload existing documents or workflows?',
+    question:
+      "Can you extract information from scanned or handwritten documents?",
     answer:
-      'Absolutely. You can upload PDFs, spreadsheets, or handwritten samples. We’ll help convert them into structured, reusable formats.',
+      "Extraction depends on document quality, layout, and handwriting legibility. We can review a representative sample to establish what can be captured and where manual checking may be needed.",
   },
   {
-    question: 'Is my data secure?',
+    question: "How do you clean and validate datasets?",
     answer:
-      'We follow strict data handling protocols, including encrypted transmission, role-based access, and secure cloud storage.',
+      "Depending on the agreed scope, checks can include identifying duplicates, standardizing formats, reviewing missing values, and flagging inconsistent entries. Ambiguous information should be reviewed rather than guessed.",
   },
   {
-    question: 'Do you offer custom integrations?',
+    question: "Do you transcribe audio and video?",
     answer:
-      'Yes. We can integrate with your dashboards, CRMs, or audit systems using APIs or custom export formats.',
+      "We can discuss transcription for recordings such as meetings, interviews, and voice notes. Recording quality, duration, language, and formatting requirements help determine the scope and turnaround.",
   },
   {
-    question: 'How do you ensure accuracy in large-scale data entry?',
+    question: "Can I combine multiple services?",
     answer:
-      'We combine structured form logic, validation rules, and manual review to maintain precision across bulk uploads and high-volume entry tasks.',
+      "Yes. A project can include several stages, such as capturing information from documents, cleaning the resulting dataset, and preparing a structured output. We’ll agree on the deliverables before work begins.",
   },
   {
-    question: 'Can you extract data from scanned forms or handwritten notes?',
+    question: "Can you help with offline capture or integrations?",
     answer:
-      'Yes. Our OCR and document parsing workflows support typed and handwritten content, including invoices, consent forms, and field notes.',
+      "Tell us about your field conditions and existing systems. Offline capture, synchronization, and integrations require a review of the tools and technical requirements before we can confirm a solution.",
   },
   {
-    question: 'What types of data can you capture from images or PDFs?',
+    question: "How will my information be handled?",
     answer:
-      'We extract structured insights such as names, dates, IDs, and form responses—optimized for consistency and downstream analysis.',
+      "Before sharing source files, discuss any confidentiality, access, and storage requirements with us. Please avoid including sensitive records in the initial enquiry form, and review our Privacy Policy.",
   },
   {
-    question: 'How do you validate and clean existing datasets?',
+    question: "How much will my project cost?",
     answer:
-      'We apply rule-based checks, cross-field logic, and manual reviews to identify duplicates, correct inconsistencies, and standardize formats.',
+      "Pricing depends on the service, volume, source quality, required output, and deadline. Send us a brief description so we can discuss the scope and prepare a quote.",
   },
   {
-    question: 'Do you support transcription of audio and video files?',
+    question: "How long does a project take?",
     answer:
-      'Absolutely. We transcribe meetings, interviews, and voice notes into structured text, ready for documentation, analysis, or compliance.',
+      "Turnaround depends on project size, complexity, and current availability. Include your preferred deadline in your enquiry so we can discuss a realistic delivery schedule.",
   },
   {
-    question: 'Can I combine multiple services in one workflow?',
+    question: "Can you help with recurring work?",
     answer:
-      'Yes. We often blend data capture, validation, and transcription into unified workflows tailored to your operational goals.',
+      "Let us know how frequently you need support and the expected volume. We can discuss whether a one-off project or an ongoing arrangement suits your requirements.",
   },
   {
-    question: 'How is pricing structured for your services?',
+    question: "Can I review a sample before starting?",
     answer:
-      'Our pricing is modular—based on the type of service, data volume, and turnaround time. We offer transparent quotes and flexible packages tailored to your workflow.',
+      "The Services page includes illustrative examples. If you need a sample based on your own material, ask us about its scope, availability, and any associated cost.",
   },
   {
-    question: 'Do you offer subscription plans or one-off projects?',
+    question: "What are the payment and refund terms?",
     answer:
-      'Both. You can engage us for one-time data tasks or opt into monthly plans for ongoing support, with priority turnaround and discounted rates.',
-  },
-  {
-    question: 'What payment methods do you accept?',
-    answer:
-      'We accept major credit cards, EFTs, and PayPal. For enterprise clients, we also support invoicing and purchase orders.',
-  },
-  {
-    question: 'Can I get a refund if I’m not satisfied?',
-    answer:
-      'Yes. If a deliverable doesn’t meet the agreed scope or quality standards, we’ll either revise it or issue a partial/full refund depending on the situation.',
-  },
-  {
-    question: 'Do you offer free trials or sample workflows?',
-    answer:
-      'We offer sample workflows and pilot runs for select services so you can evaluate quality before committing to a full engagement.',
+      "Payment methods and terms should be confirmed in your quote or project agreement. Please review our Refund Policy and discuss any questions about revisions or refunds before proceeding.",
   },
 ];
 
 const FaqSection = () => {
-
-    const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggleAnswer = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="bg-[#fefefe] text-[#1e1b4b] py-20 px-6 md:px-12 lg:px-24">
-      <div className="max-w-4xl mx-auto">
-        <h2 id="frequently-asked-questions" className="text-2xl md:text-4xl font-extrabold text-center mb-12">
-          Frequently Asked Questions
+    <section
+      aria-labelledby="frequently-asked-questions"
+      className="grid items-start gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-16"
+    >
+      <div>
+        <span
+          aria-hidden="true"
+          className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 text-[#b84900]"
+        >
+          <MessageCircle size={25} />
+        </span>
+
+        <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-[#b84900]">
+          A little more clarity
+        </p>
+
+        <h2
+          id="frequently-asked-questions"
+          className="text-3xl font-extrabold leading-tight tracking-tight text-[#10152f] sm:text-4xl"
+        >
+          Good questions.
+          <br />
+          Clear answers.
         </h2>
 
-        <div className="space-y-8">
-          {faqs.map(({ question, answer }, index) => (
-            <div
-              key={index}
-              className="bg-gradient-to-br from-[#f2f2f2] to-[#e6ebf4] rounded-xl p-6 shadow-md hover:shadow-lg transition duration-300 cursor-pointer"
-              onClick={() => toggleAnswer(index)}
-            >
-              <h3 className="text-lg font-bold mb-2 text-[#1e1b4b]">{question}
-                
-              </h3>
-              {openIndex === index && (
-                <p className="text-sm text-[#332E81] mt-2">{answer}</p>
-              )}
-            </div>
-          ))}
+        <p className="mt-5 max-w-md text-base leading-8 text-slate-600">
+          Explore the essentials before getting started. For anything specific
+          to your project, we’re happy to talk it through.
+        </p>
+
+        <a
+          href="mailto:mandla@swdatasolutions.com"
+          className="sw-faq-contact mt-7 inline-flex items-center gap-2 rounded-lg py-2 text-sm font-bold text-[#b84900]"
+        >
+          Ask us a question
+          <ArrowUpRight size={18} aria-hidden="true" />
+        </a>
+
+        <div className="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs font-semibold text-slate-600">
+          <a
+            href="/privacy-policy"
+            className="rounded underline underline-offset-4 hover:text-[#b84900]"
+          >
+            Privacy Policy
+          </a>
+          <a
+            href="/refund-policy"
+            className="rounded underline underline-offset-4 hover:text-[#b84900]"
+          >
+            Refund Policy
+          </a>
         </div>
+      </div>
+
+      <div className="min-w-0 space-y-3">
+        {faqs.map(({ question, answer }, index) => {
+          const isOpen = openIndex === index;
+          const questionId = `sw-faq-question-${index}`;
+          const answerId = `sw-faq-answer-${index}`;
+
+          return (
+            <div
+              key={question}
+              className={`sw-faq-item ${isOpen ? "is-open" : ""}`}
+            >
+              <h3>
+                <button
+                  id={questionId}
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-controls={answerId}
+                  onClick={() =>
+                    setOpenIndex((current) =>
+                      current === index ? null : index,
+                    )
+                  }
+                  className="sw-faq-question"
+                >
+                  <span>{question}</span>
+
+                  <span className="sw-faq-toggle" aria-hidden="true">
+                    <Plus size={18} />
+                  </span>
+                </button>
+              </h3>
+
+              <div
+                id={answerId}
+                aria-labelledby={questionId}
+                hidden={!isOpen}
+                className="px-5 pb-6 sm:px-6"
+              >
+                <p className="max-w-2xl text-sm leading-7 text-slate-600">
+                  {answer}
+                </p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

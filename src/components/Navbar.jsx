@@ -1,418 +1,348 @@
+import { useEffect, useRef, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
+import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
+import whiteCubes from "../assets/white-cubes.png";
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import AboutModal from './modals/AboutModal';
-import ServicesModal from './modals/ServicesModal';
-import IndustriesModal from './modals/IndustriesModal';
-import { ChevronDown, Menu, X } from 'lucide-react';
-import whiteCubes from '../assets/white-cubes.png';
+const groups = [
+  {
+    label: "About",
+    to: "/about",
+    description: "Get to know the people and purpose behind Stonewall.",
+    links: [
+      { label: "Who we are", to: "/about#who-we-are" },
+      { label: "Our mission", to: "/about#our-mission" },
+      { label: "Our commitment", to: "/about#our-commitment" },
+      { label: "Our values", to: "/about#values" },
+    ],
+  },
+  {
+    label: "Services",
+    to: "/services",
+    description: "Practical support for clearer, more usable information.",
+    links: [
+      { label: "Data capture", to: "/services#data-entry-capture" },
+      { label: "Data cleaning", to: "/services#data-cleaning" },
+      { label: "Transcription", to: "/services#transcription-services" },
+    ],
+  },
+  {
+    label: "Industries",
+    to: "/industries",
+    description: "Find practical data support for your sector.",
+    links: [
+      { label: "Healthcare & clinics", to: "/industries#healthcare" },
+      { label: "Education & research", to: "/industries#education" },
+      { label: "Field operations & NGOs", to: "/industries#research" },
+      { label: "Facilities management", to: "/industries#facilities" },
+      { label: "Finance & insurance", to: "/industries#finance" },
+      { label: "Legal & compliance", to: "/industries#legal" },
+      { label: "Retail & commerce", to: "/industries#retail" },
+      { label: "Logistics & operations", to: "/industries#logistics" },
+    ],
+  },
+];
 
+const Navigation = () => {
+  const [openGroup, setOpenGroup] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileGroup, setMobileGroup] = useState(null);
+  const headerRef = useRef(null);
+  const menuButtonRef = useRef(null);
 
-const Navbar = () => {
-  const location = useLocation();
+  const closeMenus = () => {
+    setOpenGroup(null);
+    setMobileOpen(false);
+    setMobileGroup(null);
+  };
 
-  // Single source of truth for which modal is open: 'about' | 'services' | 'industries' | null
-  const [activeModal, setActiveModal] = useState(null);
-
-  // Mobile menu state
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Mobile dropdown (collapsible sections inside mobile menu)
-  const [openMobileDropdown, setOpenMobileDropdown] = useState(null); // 'about' | 'services' | 'industries' | null
-
-  // Refs for outside-click handling
-  const modalBackdropRef = useRef(null);
-
-
-  // Close overlays on route change
   useEffect(() => {
-    closeAllOverlays();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
-
-  // Close on Escape key
-  useEffect(() => {
-    const onKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        closeAllOverlays();
+    const onPointerDown = (event) => {
+      if (!headerRef.current?.contains(event.target)) {
+        setOpenGroup(null);
+        setMobileOpen(false);
+        setMobileGroup(null);
       }
     };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+
+    const onResize = () => {
+      if (window.innerWidth >= 1280) {
+        setMobileOpen(false);
+        setMobileGroup(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
-  // Lock body scroll when mobile menu or any modal is open
-  useEffect(() => {
-    const shouldLock = isMobileMenuOpen || Boolean(activeModal);
-    document.body.style.overflow = shouldLock ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isMobileMenuOpen, activeModal]);
-
-  // Close all overlays helper
-  const closeAllOverlays = () => {
-    setActiveModal(null);
-    setIsMobileMenuOpen(false);
-    setOpenMobileDropdown(null);
-  };
-
-  // Toggle a specific modal
-  const toggleModal = (type) => {
-    setActiveModal((prev) => (prev === type ? null : type));
-  };
-
-  // Mobile dropdown toggles (inside the mobile menu)
-  const toggleMobileDropdown = (type) => {
-    setOpenMobileDropdown((prev) => (prev === type ? null : type));
-  };
-
-  // Utility: active link class handling for NavLink
-  const navLinkClasses = ({ isActive }) =>
-    `transition-colors hover:text-[#ff7200] ${
-      isActive ? 'text-[#ff7200] font-bold' : 'text-[#1e1b4b]'
-    }`;
+  const navClass = ({ isActive }) =>
+    `sw-nav-link${isActive ? " is-active" : ""}`;
 
   return (
-    <>
-      {/* Top navigation bar */}
-      <nav
-        className="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur shadow-md px-4 sm:px-6 py-3 sm:py-4"
-        role="navigation"
-        aria-label="Primary"
-      >
-        <div className="mx-auto max-w-7xl flex items-center justify-between">
-          {/* Brand / Logo */}
-          <Link to="/" className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200] rounded-md">
-            <img src={whiteCubes} alt="Stonewall Data Solutions Logo" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
-            <div className="flex flex-col leading-tight">
-              <span className="text-[#1e1b4b] font-extrabold text-base sm:text-xl tracking-tight">
-                Stonewall Data Solutions
-              </span>
-              <span className="text-xs sm:text-sm font-medium text-[#ff7200]">
-                Structure the Data &amp; Unlock the Value.
-              </span>
-            </div>
-          </Link>
+    <header
+      ref={headerRef}
+      className="sw-header"
+      onKeyDown={(event) => {
+        if (event.key !== "Escape") return;
 
-          {/* Desktop navigation */}
-          <ul className="hidden md:flex items-center gap-6 text-[#1e1b4b] font-medium">
+        const group = event.target.closest("[data-nav-group]");
+        group?.querySelector("button")?.focus();
+
+        if (mobileOpen) menuButtonRef.current?.focus();
+        closeMenus();
+      }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          closeMenus();
+        }
+      }}
+    >
+      <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-5 px-5 sm:px-8">
+        <Link
+          to="/"
+          onClick={closeMenus}
+          className="flex min-w-0 items-center gap-3 rounded-lg"
+        >
+          <img
+            src={whiteCubes}
+            alt=""
+            className="h-10 w-10 shrink-0 object-contain sm:h-12 sm:w-12"
+          />
+          <div className="min-w-0">
+            <p className="text-sm font-extrabold tracking-tight text-[#10152f] sm:text-lg">
+              Stonewall Data Solutions
+            </p>
+            <p className="mt-1 text-[10px] text-[#b84300] sm:text-xs">
+              Structure the Data &amp; Unlock the Value.
+            </p>
+          </div>
+        </Link>
+
+        <nav aria-label="Primary" className="hidden xl:block">
+          <ul className="flex items-center gap-7">
             <li>
-              <NavLink to="/" className={navLinkClasses}>
+              <NavLink to="/" end className={navClass}>
                 Home
               </NavLink>
             </li>
 
-            {/* About with modal trigger */}
-            <li className="relative flex items-center gap-1">
-              <NavLink to="/about" className={navLinkClasses}>
-                About
-              </NavLink>
-              <button
-                type="button"
-                onClick={() => toggleModal('about')}
-                aria-haspopup="dialog"
-                aria-expanded={activeModal === 'about'}
-                aria-controls="about-modal"
-                className="p-1 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
+            {groups.map((group) => (
+              <li
+                key={group.label}
+                data-nav-group
+                className="sw-nav-group"
+                onPointerEnter={(event) => {
+                  if (event.pointerType === "mouse") {
+                    setOpenGroup(group.label);
+                  }
+                }}
+                onPointerLeave={(event) => {
+                  if (
+                    event.pointerType === "mouse" &&
+                    !event.currentTarget.contains(document.activeElement)
+                  ) {
+                    setOpenGroup(null);
+                  }
+                }}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget)) {
+                    setOpenGroup(null);
+                  }
+                }}
               >
-                <ChevronDown
-                  size={16}
-                  className={`text-[#332E81] hover:text-[#ff7200] transition-transform duration-300 ${
-                    activeModal === 'about' ? 'rotate-180' : ''
-                  }`}
-                />
-                <span className="sr-only">Toggle About modal</span>
-              </button>
-            </li>
+                <div className="flex items-center gap-1">
+                  <NavLink to={group.to} className={navClass}>
+                    {group.label}
+                  </NavLink>
 
-            {/* Services with modal trigger */}
-            <li className="relative flex items-center gap-1">
-              <NavLink to="/services" className={navLinkClasses}>
-                Services
-              </NavLink>
-              <button
-                type="button"
-                onClick={() => toggleModal('services')}
-                aria-haspopup="dialog"
-                aria-expanded={activeModal === 'services'}
-                aria-controls="services-modal"
-                className="p-1 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
-              >
-                <ChevronDown
-                  size={16}
-                  className={`text-[#332E81] hover:text-[#ff7200] transition-transform duration-300 ${
-                    activeModal === 'services' ? 'rotate-180' : ''
-                  }`}
-                />
-                <span className="sr-only">Toggle Services modal</span>
-              </button>
-            </li>
+                  <button
+                    type="button"
+                    aria-label={`Show ${group.label.toLowerCase()} links`}
+                    aria-expanded={openGroup === group.label}
+                    aria-controls={`dropdown-${group.label}`}
+                    onClick={() =>
+                      setOpenGroup((current) =>
+                        current === group.label ? null : group.label,
+                      )
+                    }
+                    className="sw-nav-toggle"
+                  >
+                    <ChevronDown
+                      size={15}
+                      aria-hidden="true"
+                      className={openGroup === group.label ? "rotate-180" : ""}
+                    />
+                  </button>
+                </div>
 
-            {/* Industries with modal trigger */}
-            <li className="relative flex items-center gap-1">
-              <NavLink to="/industries" className={navLinkClasses}>
-                Industries
-              </NavLink>
-              <button
-                type="button"
-                onClick={() => toggleModal('industries')}
-                aria-haspopup="dialog"
-                aria-expanded={activeModal === 'industries'}
-                aria-controls="industries-modal"
-                className="p-1 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
-              >
-                <ChevronDown
-                  size={16}
-                  className={`text-[#332E81] hover:text-[#ff7200] transition-transform duration-300 ${
-                    activeModal === 'industries' ? 'rotate-180' : ''
-                  }`}
-                />
-                <span className="sr-only">Toggle Industries modal</span>
-              </button>
-            </li>
+                {openGroup === group.label && (
+                  <div
+                    id={`dropdown-${group.label}`}
+                    className="sw-dropdown-wrap"
+                  >
+                    <div className="sw-dropdown">
+                      <p className="text-xs font-bold tracking-widest text-[#b84300] uppercase">
+                        {group.label}
+                      </p>
+                      <p className="mt-3 text-sm leading-6 text-slate-500">
+                        {group.description}
+                      </p>
+
+                      <ul className="mt-5 space-y-1">
+                        {group.links.map((link) => (
+                          <li key={link.to}>
+                            <HashLink
+                              smooth
+                              to={link.to}
+                              onClick={closeMenus}
+                              className="sw-dropdown-link"
+                            >
+                              {link.label}
+                              <ArrowUpRight size={17} aria-hidden="true" />
+                            </HashLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </li>
+            ))}
 
             <li>
-              <NavLink to="/contact" className={navLinkClasses}>
+              <NavLink to="/contact" className={navClass}>
                 Contact
               </NavLink>
             </li>
           </ul>
+        </nav>
 
-          {/* CTA (desktop only to reduce mobile clutter) */}
-          <Link
-            to="/services"
-            className="hidden md:inline-flex bg-gradient-to-br from-[#ff7200] to-[#be3c05] shadow-md text-white px-6 py-2 rounded-full hover:opacity-90 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
-          >
-            Explore
-          </Link>
+        <Link
+          to="/contact"
+          className="sw-button sw-button-primary hidden! xl:inline-flex!"
+        >
+          Let's talk
+          <ArrowUpRight size={17} aria-hidden="true" />
+        </Link>
 
-          {/* Mobile menu button */}
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-menu"
-            className="md:hidden text-[#ff7200] p-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
-          >
-            {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
-          </button>
-        </div>
-      </nav>
+        <button
+          ref={menuButtonRef}
+          type="button"
+          aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setMobileOpen((current) => !current)}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-[#10152f] xl:hidden"
+        >
+          {mobileOpen ? (
+            <X size={22} aria-hidden="true" />
+          ) : (
+            <Menu size={22} aria-hidden="true" />
+          )}
+        </button>
+      </div>
 
-      {/* Mobile menu (full-screen overlay, slides in) */}
-      <aside
-        id="mobile-menu"
-        className={`md:hidden fixed inset-0 z-40 pt-[4.25rem] bg-white transition-transform duration-300 ${
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-        aria-label="Mobile menu"
-      >
-        {/* Content container */}
-        <div className="h-full overflow-y-auto">
-          <div className="px-6 py-4 space-y-2">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `block px-2 py-3 rounded-md text-base ${
-                  isActive ? 'text-[#ff7200] font-bold' : 'text-[#1e1b4b]'
-                } hover:text-[#ff7200]`
-              }
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
+      {mobileOpen && (
+        <nav
+          id="mobile-navigation"
+          aria-label="Mobile"
+          className="sw-mobile-navigation xl:hidden"
+        >
+          <div className="mx-auto max-w-7xl px-6 py-5 sm:px-8">
+            <NavLink to="/" end onClick={closeMenus} className="sw-mobile-link">
               Home
             </NavLink>
 
-            {/* About dropdown (mobile only) */}
-            <div className="border-t border-gray-100 pt-2">
-              <button
-                type="button"
-                onClick={() => toggleMobileDropdown('about')}
-                aria-expanded={openMobileDropdown === 'about'}
-                className="w-full flex items-center justify-between px-2 py-3 rounded-md text-base text-[#1e1b4b] hover:text-[#ff7200] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
-              >
-                <span>About</span>
-                <ChevronDown
-                  size={18}
-                  className={`text-[#332E81] transition-transform duration-300 ${
-                    openMobileDropdown === 'about' ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-              {openMobileDropdown === 'about' && (
-                <div className="pl-3 mt-1 space-y-2 text-sm">
+            {groups.map((group) => (
+              <div key={group.label} className="border-b border-slate-200">
+                <div className="flex items-center justify-between">
                   <NavLink
-                    to="/about"
-                    className={({ isActive }) =>
-                      `block px-2 py-2 rounded-md ${
-                        isActive ? 'text-[#ff7200] font-semibold' : 'text-[#1e1b4b]'
-                      } hover:text-[#ff7200]`
-                    }
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    to={group.to}
+                    onClick={closeMenus}
+                    className="sw-mobile-link border-0!"
                   >
-                    Overview
+                    {group.label}
                   </NavLink>
-                  {/* You can add more About sub-links here if needed */}
-                </div>
-              )}
-            </div>
 
-            {/* Services dropdown (mobile only) */}
-            <div className="border-t border-gray-100 pt-2">
-              <button
-                type="button"
-                onClick={() => toggleMobileDropdown('services')}
-                aria-expanded={openMobileDropdown === 'services'}
-                className="w-full flex items-center justify-between px-2 py-3 rounded-md text-base text-[#1e1b4b] hover:text-[#ff7200] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
-              >
-                <span>Services</span>
-                <ChevronDown
-                  size={18}
-                  className={`text-[#332E81] transition-transform duration-300 ${
-                    openMobileDropdown === 'services' ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-              {openMobileDropdown === 'services' && (
-                <div className="pl-3 mt-1 space-y-2 text-sm">
-                  <NavLink
-                    to="/services"
-                    className={({ isActive }) =>
-                      `block px-2 py-2 rounded-md ${
-                        isActive ? 'text-[#ff7200] font-semibold' : 'text-[#1e1b4b]'
-                      } hover:text-[#ff7200]`
+                  <button
+                    type="button"
+                    aria-label={`Show ${group.label.toLowerCase()} links`}
+                    aria-expanded={mobileGroup === group.label}
+                    aria-controls={`mobile-${group.label}`}
+                    onClick={() =>
+                      setMobileGroup((current) =>
+                        current === group.label ? null : group.label,
+                      )
                     }
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex h-11 w-11 items-center justify-center rounded-lg text-[#10152f]"
                   >
-                    All Services
-                  </NavLink>
-                  {/* Add individual services links if you have routes */}
+                    <ChevronDown
+                      size={18}
+                      aria-hidden="true"
+                      className={
+                        mobileGroup === group.label ? "rotate-180" : ""
+                      }
+                    />
+                  </button>
                 </div>
-              )}
-            </div>
 
-            {/* Industries dropdown (mobile only) */}
-            <div className="border-t border-gray-100 pt-2">
-              <button
-                type="button"
-                onClick={() => toggleMobileDropdown('industries')}
-                aria-expanded={openMobileDropdown === 'industries'}
-                className="w-full flex items-center justify-between px-2 py-3 rounded-md text-base text-[#1e1b4b] hover:text-[#ff7200] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
-              >
-                <span>Industries</span>
-                <ChevronDown
-                  size={18}
-                  className={`text-[#332E81] transition-transform duration-300 ${
-                    openMobileDropdown === 'industries' ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-              {openMobileDropdown === 'industries' && (
-                <div className="pl-3 mt-1 space-y-2 text-sm">
-                  <NavLink
-                    to="/industries"
-                    className={({ isActive }) =>
-                      `block px-2 py-2 rounded-md ${
-                        isActive ? 'text-[#ff7200] font-semibold' : 'text-[#1e1b4b]'
-                      } hover:text-[#ff7200]`
-                    }
-                    onClick={() => setIsMobileMenuOpen(false)}
+                {mobileGroup === group.label && (
+                  <ul
+                    id={`mobile-${group.label}`}
+                    className="mb-4 rounded-xl bg-orange-50 p-2"
                   >
-                    Industry List
-                  </NavLink>
-                  {/* Add sub-industry links here if needed */}
-                </div>
-              )}
-            </div>
+                    {group.links.map((link) => (
+                      <li key={link.to}>
+                        <HashLink
+                          smooth
+                          to={link.to}
+                          onClick={closeMenus}
+                          className="sw-dropdown-link"
+                        >
+                          {link.label}
+                          <ArrowUpRight size={16} aria-hidden="true" />
+                        </HashLink>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
 
             <NavLink
               to="/contact"
-              className={({ isActive }) =>
-                `block px-2 py-3 rounded-md text-base ${
-                  isActive ? 'text-[#ff7200] font-bold' : 'text-[#1e1b4b]'
-                } hover:text-[#ff7200]`
-              }
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMenus}
+              className="sw-mobile-link"
             >
               Contact
             </NavLink>
 
-            {/* CTA inside mobile menu */}
-            <div className="pt-4">
-              <Link
-                to="/services"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="inline-flex w-full justify-center bg-gradient-to-br from-[#ff7200] to-[#be3c05] shadow-md text-white px-6 py-3 rounded-full hover:opacity-90 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7200]"
-              >
-                Explore
-              </Link>
-            </div>
+            <Link
+              to="/contact"
+              onClick={closeMenus}
+              className="sw-button sw-button-primary mt-6 w-full"
+            >
+              Discuss your project
+              <ArrowUpRight size={18} aria-hidden="true" />
+            </Link>
           </div>
-        </div>
-      </aside>
-
-      {/* Modals (desktop + mobile) */}
-      {activeModal === 'about' && (
-        <div
-          id="about-modal"
-          ref={modalBackdropRef}
-          className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-[#1e1b4b]/30"
-          role="dialog"
-          aria-modal="true"
-          aria-label="About"
-          onClick={(e) => {
-            // Close when clicking backdrop only
-            if (e.target === modalBackdropRef.current) setActiveModal(null);
-          }}
-        >
-          {/* Prevent backdrop click from closing when clicking inside modal */}
-          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-5xl">
-            <AboutModal onClose={() => setActiveModal(null)} />
-          </div>
-        </div>
+        </nav>
       )}
-
-      {activeModal === 'services' && (
-        <div
-          id="services-modal"
-          ref={modalBackdropRef}
-          className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-[#1e1b4b]/30"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Services"
-          onClick={(e) => {
-            if (e.target === modalBackdropRef.current) setActiveModal(null);
-          }}
-        >
-          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-5xl">
-            <ServicesModal onClose={() => setActiveModal(null)} />
-          </div>
-        </div>
-      )}
-
-      {activeModal === 'industries' && (
-        <div
-          id="industries-modal"
-          ref={modalBackdropRef}
-          className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-[#1e1b4b]/30"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Industries"
-          onClick={(e) => {
-            if (e.target === modalBackdropRef.current) setActiveModal(null);
-          }}
-        >
-        <div onClick={(e) => e.stopPropagation()} className="w-full max-w-5xl">
-            <IndustriesModal onClose={() => setActiveModal(null)} />
-          </div>
-        </div>
-      )}
-
-      {/* Spacer to account for fixed navbar height */}
-      <div className="h-[4.25rem] md:h-[4.5rem]" aria-hidden="true" />
-    </>
+    </header>
   );
+};
+
+const Navbar = () => {
+  const location = useLocation();
+
+  // Reset open menus whenever navigation changes.
+  return <Navigation key={location.key} />;
 };
 
 export default Navbar;

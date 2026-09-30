@@ -1,188 +1,218 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import {
-  CheckCircle2,
-  AlertTriangle,
-  Timer,
-  ClipboardCheck,
-  ExternalLink,
-  BrushCleaning,
-} from 'lucide-react';
-
-type Sample = {
-  title: string;
-  fullSample: string;
-};
+  CopyCheck,
+  CaseSensitive,
+  CalendarDays,
+  ListFilter,
+  FileQuestion,
+  ArrowRight,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 const cleaningModes = [
   {
-    title: 'Zone-Based Logging',
+    title: "Duplicate records",
+    icon: <CopyCheck size={25} aria-hidden="true" />,
     description:
-      'Logs cleaning activity by zone, timestamp, and personnel. Ideal for shift tracking and audit trails.',
-    sample: `[08:15 AM] Cleaner #2 completed Zone A`,
-    fullSample: `Zone-Based Log — A4 Format
+      "Identify repeated records and apply agreed rules for keeping, merging, or flagging them.",
+    before: `Customer ID | Name
+C001        | Example Customer
+C001        | Example Customer`,
+    after: `Customer ID | Name
+C001        | Example Customer
 
-[Start of Log]
-
-[07:45 AM] Cleaner #1 began Zone A
-[08:15 AM] Cleaner #2 completed Zone A
-[08:30 AM] Supervisor reviewed Zone A
-[09:00 AM] Cleaner #3 began Zone B
-[09:45 AM] Cleaner #3 completed Zone B
-[10:00 AM] Supplies restocked in Zone C
-
-Audit Status: Logged
-Supervisor Notes: No issues reported
-
-[End of Log]`,
-    icon: BrushCleaning,
+Exact duplicate removed.
+Potential matches require review.`,
   },
   {
-    title: 'Checklist Completion',
+    title: "Consistent text",
+    icon: <CaseSensitive size={25} aria-hidden="true" />,
     description:
-      'Tracks task completion against predefined checklists. Useful for quality control and compliance.',
-    sample: `✓ Trash removed\n✓ Surfaces wiped\n✓ Floors mopped`,
-    fullSample: `Checklist — A4 Format
+      "Standardize casing and remove unnecessary spaces so values follow a consistent format.",
+    before: `City
+" johannesburg "
+"JOHANNESBURG"
+"Johannesburg"`,
+    after: `City
+Johannesburg
+Johannesburg
+Johannesburg
 
-[Start of Checklist]
-
-Zone A — Morning Shift
-
-✓ Trash removed
-✓ Surfaces wiped
-✓ Floors mopped
-✓ Windows cleaned
-✓ Supplies restocked
-
-Supervisor Signature: ____________________
-Time Completed: 08:45 AM
-
-[End of Checklist]`,
-    icon: ClipboardCheck,
+Whitespace removed.
+Capitalization standardized.`,
   },
   {
-    title: 'Issue Flagging',
+    title: "Dates and formats",
+    icon: <CalendarDays size={25} aria-hidden="true" />,
     description:
-      'Allows cleaners to report problems or delays. Supports escalation and resolution tracking.',
-    sample: `⚠️ Zone C: Broken vacuum reported at 09:10 AM`,
-    fullSample: `Issue Report — A4 Format
-
-[Start of Report]
-
-Zone: C
-Issue: Broken vacuum
-Reported By: Cleaner #4
-Time: 09:10 AM
-Severity: Medium
-
-Supervisor Response:
-- Replacement requested
-- Temporary workaround approved
-
-Resolution Time: 11:30 AM
-
-[End of Report]`,
-    icon: AlertTriangle,
+      "Align date formats and flag ambiguous values instead of silently guessing their meaning.",
+    before: `Date
+30 Sep 2026
+2026/09/30
+03/04/2026`,
+    after: `Date       | Review
+2026-09-30 | Not required
+2026-09-30 | Not required
+Unresolved | Confirm day/month order`,
   },
   {
-    title: 'Time-Based Entry',
+    title: "Categories and labels",
+    icon: <ListFilter size={25} aria-hidden="true" />,
     description:
-      'Captures cleaning events with precise timestamps. Supports audits, reviews, and shift handovers.',
-    sample: `[10:15 AM] Cleaner #4 completed Zone B`,
-    fullSample: `Time Log — A4 Format
+      "Map inconsistent labels to agreed categories for clearer grouping and reporting.",
+    before: `Status
+active
+ACTIVE
+Act.
+Pending`,
+    after: `Status
+Active
+Active
+Active
+Pending
 
-[Start of Log]
-
-[08:00 AM] Cleaner #2 began Zone A
-[09:45 AM] Cleaner #2 completed Zone A
-[10:15 AM] Cleaner #4 completed Zone B
-[11:00 AM] Supervisor reviewed Zone B
-[11:30 AM] Supplies restocked in Zone C
-
-Audit Status: Logged
-Supervisor Notes: No issues reported
-
-[End of Log]`,
-    icon: Timer,
+Mapping confirmed against
+the agreed category list.`,
   },
   {
-    title: 'Quality Review',
+    title: "Missing information",
+    icon: <FileQuestion size={25} aria-hidden="true" />,
     description:
-      'Supervisor reviews with notes, ratings, and follow-ups. Ensures accountability and continuous improvement.',
-    sample: `Zone B: 4/5 — missed corner near entrance`,
-    fullSample: `Quality Review — A4 Format
-
-[Start of Review]
-
-Zone: B
-Reviewed By: Supervisor #2
-Time: 11:00 AM
-
-Rating: 4/5
-Notes:
-- Missed corner near entrance
-- Supplies well-stocked
-- Trash removed
-- Surfaces clean
-
-Follow-Up:
-- Cleaner notified
-- Re-clean scheduled for 12:30 PM
-
-[End of Review]`,
-    icon: CheckCircle2,
+      "Identify gaps and flag them for review. Missing information is not invented.",
+    before: `Record | Email
+A001   | contact@example.com
+A002   |
+A003   | Not provided`,
+    after: `Record | Email               | Review
+A001   | contact@example.com | Not required
+A002   |                     | Missing email
+A003   |                     | Missing email`,
   },
 ];
 
 const DataCleaningGrid = () => {
-   const [selectedSample, setSelectedSample] = useState<Sample | null>(null);
+  const [showExamples, setShowExamples] = useState(false);
 
   return (
-    <section className="bg-[#fefefe] text-[#1e1b4b] py-20 px-6 md:px-12 lg:px-24">
-      <div className="max-w-6xl mx-auto">
-        <h2 id="data-cleaning" className="text-2xl md:text-4xl font-extrabold text-center mb-12">
-          Data Cleaning 
-        </h2>
+    <section
+      id="data-cleaning"
+      aria-labelledby="cleaning-heading"
+      className="sw-services"
+    >
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:py-24">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+          <div>
+            <p className="mb-4 text-xs font-bold tracking-[0.2em] text-[#b84300] uppercase">
+              03 / Data cleaning
+            </p>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 mb-16">
-          {cleaningModes.map(({ title, description, sample, fullSample, icon: Icon }) => (
-            <div
-              key={title}
-              className="bg-gradient-to-br from-[#f2f2f2] to-[#e6ebf4] rounded-xl p-6 shadow-md hover:shadow-lg transition duration-300"
+            <h2
+              id="cleaning-heading"
+              className="text-4xl leading-tight font-extrabold tracking-[-0.04em] text-[#10152f] sm:text-5xl"
             >
-              <Icon className="w-7 h-7 text-[#ff7200] mb-4" />
-              <h3 className="text-lg font-bold mb-2">{title}</h3>
-              <p className="text-sm text-[#332E81]">{description}</p>
-              <p className="mt-3 text-sm italic text-[#1e1b4b]">Sample: {sample}</p>
-              <button
-                onClick={() => setSelectedSample({ title, fullSample })}
-                className="mt-4 inline-flex items-center text-sm text-[#ff7200] hover:underline"
+              Clear the inconsistencies.
+              <br />
+              <span className="text-[#b84300]">Keep the meaning.</span>
+            </h2>
+          </div>
+
+          <div className="lg:pt-8">
+            <p className="text-base leading-8 text-slate-600">
+              Duplicates, inconsistent formats, and missing values can make
+              everyday work harder. We help organize your datasets using agreed
+              rules and flag records that need your input.
+            </p>
+            <p className="mt-4 text-sm leading-7 text-slate-500">
+              The examples below illustrate common cleaning tasks. The approach
+              for your project depends on your data and requirements.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-5">
+          <p className="text-sm font-semibold text-[#10152f]">
+            Small improvements. Clearer records.
+          </p>
+
+          <label className="inline-flex cursor-pointer items-center gap-3 rounded-full border border-orange-200 bg-white px-4 py-3 text-sm font-semibold text-[#10152f]">
+            <input
+              type="checkbox"
+              checked={showExamples}
+              onChange={(event) => setShowExamples(event.target.checked)}
+              aria-controls="cleaning-examples"
+              className="h-4 w-4 accent-[#b84300]"
+            />
+            Show all examples
+          </label>
+        </div>
+
+        <div
+          id="cleaning-examples"
+          className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+        >
+          {cleaningModes.map((mode) => (
+            <article key={mode.title} className="sw-capture-card">
+              <span className="sw-service-icon">{mode.icon}</span>
+
+              <h3 className="mt-6 text-xl font-bold tracking-tight text-[#10152f]">
+                {mode.title}
+              </h3>
+
+              <p className="mt-4 text-sm leading-7 text-slate-600">
+                {mode.description}
+              </p>
+
+              <details
+                key={`${mode.title}-${showExamples}`}
+                open={showExamples}
+                className="mt-6"
               >
-                <ExternalLink className="w-4 h-4 mr-1" />
-                View Full Sample
-              </button>
-            </div>
+                <summary className="cursor-pointer rounded-lg py-3 text-sm font-bold text-[#b84300]">
+                  Before and after example
+                </summary>
+
+                <div className="mt-3 space-y-3">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="mb-3 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                      Before
+                    </p>
+                    <pre className="whitespace-pre-wrap break-words font-mono text-xs leading-6 text-slate-600">
+                      {mode.before}
+                    </pre>
+                  </div>
+
+                  <div className="rounded-xl border border-orange-200 bg-orange-50/60 p-4">
+                    <p className="mb-3 text-xs font-bold tracking-wider text-[#b84300] uppercase">
+                      After
+                    </p>
+                    <pre className="whitespace-pre-wrap break-words font-mono text-xs leading-6 text-[#10152f]">
+                      {mode.after}
+                    </pre>
+                  </div>
+                </div>
+              </details>
+            </article>
           ))}
         </div>
 
-        {/* Modal Popup with Blur Background */}
-        {selectedSample && (
-          <div className="fixed inset-0 z-50 px-4 overflow-y-auto backdrop-blur-sm bg-white/30">
-            <div className="mx-auto mt-10 mb-10 bg-white w-full max-w-[794px] h-[1123px] overflow-y-auto rounded-lg shadow-lg p-8 relative">
-              <button
-                onClick={() => setSelectedSample(null)}
-                className="absolute top-4 right-4 text-[#ff7200] font-bold text-lg"
-              >
-                ×
-              </button>
-              <h3 className="text-xl font-bold mb-4 text-[#1e1b4b]">
-                {selectedSample.title} — Full Sample
-              </h3>
-              <pre className="whitespace-pre-wrap text-sm text-[#332E81] leading-relaxed">
-                {selectedSample.fullSample}
-              </pre>
-            </div>
+        <div className="mt-10 flex flex-col justify-between gap-5 rounded-2xl border border-slate-200 bg-white p-6 sm:flex-row sm:items-center sm:p-8">
+          <div>
+            <h3 className="text-lg font-bold text-[#10152f]">
+              Have a dataset that needs attention?
+            </h3>
+            <p className="mt-2 text-sm leading-7 text-slate-600">
+              Tell us about its format, size, and the issues you're seeing.
+            </p>
           </div>
-        )}
+
+          <Link
+            to="/contact"
+            className="sw-button sw-button-primary shrink-0 self-start"
+          >
+            Discuss your data
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
       </div>
     </section>
   );

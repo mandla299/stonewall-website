@@ -1,111 +1,133 @@
+import { Check, ArrowRight, Files, Database } from "lucide-react";
+import { Link } from "react-router-dom";
 
-import React from 'react';
-import { CheckCircle2, Layers, Gauge, ShieldCheck, BookOpen, Wand2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+const benefits = [
+  {
+    number: "01",
+    title: "Information you can work with",
+    description:
+      "Consistent fields and formats make your records easier to search, compare, and use.",
+  },
+  {
+    number: "02",
+    title: "Less time spent fixing records",
+    description:
+      "Address duplicates and formatting issues before they interrupt everyday work.",
+  },
+  {
+    number: "03",
+    title: "A clearer view of your business",
+    description:
+      "Better organized inputs support clearer reporting and more informed decisions.",
+  },
+];
 
 const DataImportanceSection = () => {
-  const benefits = [
-    { icon: Gauge, title: 'Reliable Analysis', desc: 'KPIs and forecasts reflect reality, not noise or duplicates.' },
-    { icon: Layers, title: 'Operational Clarity', desc: 'Consistent schemas and definitions reduce rework across teams.' },
-    { icon: ShieldCheck, title: 'Compliance Ready', desc: 'Documented lineage and reproducible transformations.' },
-    { icon: BookOpen, title: 'Shared Understanding', desc: 'Data dictionaries and playbooks teams actually use.' },
-    { icon: Wand2, title: 'Scalable Pipelines', desc: 'Structure and standards that grow with your data volume.' },
-    { icon: CheckCircle2, title: 'Faster Decisions', desc: 'Self-serve insights that answer questions the first time.' },
-  ];
-
   return (
     <section
       id="why-data-organization"
-      aria-label="Importance of well-organized data"
-      className="w-full bg-orange-50 py-16 px-4 sm:px-6"  // <-- Solid background
+      aria-labelledby="data-benefits-heading"
+      className="bg-[#faf8f5]"
     >
-      <div className="mx-auto max-w-7xl">
-        {/* Intro */}
-        <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#1e1b4b]">
-            Organized Data. Confident Decisions.
-          </h2>
-          <p className="mt-4 text-base sm:text-lg text-[#1e1b4b]/90">
-            When your data is clean, structured, and documented, every team moves faster—from analytics to reporting to day‑to‑day operations.
-            Reduce noise, remove duplication, and make decisions you can stand behind.
-          </p>
-        </div>
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:py-24">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+          <div className="sw-transformation" aria-hidden="true">
+            <div className="flex items-center justify-between gap-4 border-b border-slate-200 pb-5">
+              <span className="text-sm font-bold text-[#10152f]">
+                From scattered to structured
+              </span>
+              <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-[#b84300]">
+                A clearer workflow
+              </span>
+            </div>
 
-        {/* Benefits grid */}
-        <div
-          className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
-          role="list"
-          aria-label="Benefits of well-organized data"
-        >
-          {benefits.map(({ icon: Icon, title, desc }) => (
-            <article
-              key={title}
-              role="listitem"
-              className="rounded-xl border border-orange-100 bg-white p-6 shadow-sm hover:shadow-md transition motion-reduce:transition-none"
-            >
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-100">
-                  <Icon className="h-5 w-5 text-[#ff7200]" aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-[#1e1b4b]">{title}</h3>
-                  <p className="mt-1 text-sm sm:text-base text-[#1e1b4b]/90">{desc}</p>
+            <div className="relative my-10 grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-6">
+              <div className="space-y-3">
+                {["Paper forms", "Spreadsheets", "Audio files"].map((label) => (
+                  <div
+                    key={label}
+                    className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-600 sm:p-4 sm:text-sm"
+                  >
+                    <Files size={16} className="shrink-0 text-slate-400" />
+                    {label}
+                  </div>
+                ))}
+              </div>
+
+              <ArrowRight size={22} className="text-[#b84300]" />
+
+              <div className="rounded-2xl border border-orange-200 bg-gradient-to-br from-orange-50 to-white p-4 sm:p-6">
+                <Database size={30} className="mb-4 text-[#b84300]" />
+                <p className="text-sm font-bold text-[#10152f]">
+                  Usable information
+                </p>
+                <div className="mt-4 space-y-3">
+                  {["Organized", "Consistent", "Reviewed"].map((label) => (
+                    <div
+                      key={label}
+                      className="flex items-center gap-2 text-xs text-slate-600"
+                    >
+                      <Check size={14} className="shrink-0 text-[#b84300]" />
+                      {label}
+                    </div>
+                  ))}
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
-
-        {/* Stonewall value prop */}
-        <div className="mt-14 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-center">
-          <div>
-            <h3 className="text-2xl font-bold text-[#1e1b4b]">Why Stonewall Data Solutions</h3>
-            <p className="mt-3 text-[#1e1b4b]/90">
-              Most data problems are structural, not just technical. We put governance, quality, and repeatability
-              at the center of your data lifecycle—so insights are trusted, processes are scalable, and teams align.
-            </p>
-            <ul className="mt-5 space-y-3 text-[#1e1b4b]">
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-1 h-5 w-5 text-[#ff7200]" aria-hidden="true" />
-                <span><strong>Clean & consistent inputs:</strong> Deduplication, standardization, and schema alignment across sources.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-1 h-5 w-5 text-[#ff7200]" aria-hidden="true" />
-                <span><strong>Validation you can trust:</strong> Rule-based checks plus human-in-the-loop for critical datasets.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-1 h-5 w-5 text-[#ff7200]" aria-hidden="true" />
-                <span><strong>Documented processes:</strong> Data dictionaries, definitions, and playbooks teams actually adopt.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-1 h-5 w-5 text-[#ff7200]" aria-hidden="true" />
-                <span><strong>Right‑sized tooling:</strong> We integrate with your stack—no overengineering, just outcomes.</span>
-              </li>
-            </ul>
-
-            <div className="mt-6">
-              <Link
-                to="/contact"
-                className="inline-flex items-center justify-center rounded-full bg-gradient-to-br from-[#ff7200] to-[#be3c05] text-white px-6 py-3 font-medium shadow-md hover:opacity-90 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#ff7200]"
-              >
-                Talk to our data team
-              </Link>
             </div>
+
+            <p className="border-t border-slate-200 pt-5 text-sm leading-7 text-slate-500">
+              Capture the information. Improve its structure. Prepare it for the
+              people who need it.
+            </p>
           </div>
 
-          {/* Decorative block */}
-          <div className="rounded-2xl bg-white border border-orange-100 p-6 shadow-sm">
-            <h4 className="text-xl font-semibold text-[#1e1b4b]">From chaos to confidence</h4>
-            <p className="mt-3 text-[#1e1b4b]/90">
-              We start with quick wins—fixing what’s blocking your teams today—then scale the patterns that work:
-              validation rules, reusable transforms, and clear documentation. The result isn’t just cleaner data;
-              it’s a faster, more confident organization.
+          <div>
+            <p className="mb-4 text-xs font-bold tracking-[0.2em] text-[#b84300] uppercase">
+              Why better data matters
             </p>
-            <div className="mt-4 text-sm text-[#1e1b4b]/70">
-              <p>• Accelerate time-to-insight with trustworthy KPIs</p>
-              <p>• Reduce rework and escalation loops</p>
-              <p>• Build compliance and auditability into your pipelines</p>
+
+            <h2
+              id="data-benefits-heading"
+              className="text-4xl leading-tight font-extrabold tracking-[-0.045em] text-[#10152f] sm:text-5xl"
+            >
+              Make room for
+              <br />
+              <span className="text-[#b84300]">better decisions.</span>
+            </h2>
+
+            <p className="mt-5 text-base leading-8 text-slate-600">
+              Your team should spend more time using information and less time
+              untangling it. Clear structure makes that easier.
+            </p>
+
+            <div className="mt-8">
+              {benefits.map((benefit) => (
+                <div
+                  key={benefit.number}
+                  className="flex gap-4 border-t border-slate-200 py-5"
+                >
+                  <span className="pt-1 text-xs font-bold text-[#b84300]">
+                    {benefit.number}
+                  </span>
+                  <div>
+                    <h3 className="text-base font-bold text-[#10152f]">
+                      {benefit.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-600">
+                      {benefit.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
+
+            <Link
+              to="/contact"
+              className="sw-services-link mt-4 inline-flex items-center gap-3 rounded-lg py-2 text-sm font-bold text-[#10152f]"
+            >
+              Let's discuss your data
+              <ArrowRight size={18} aria-hidden="true" />
+            </Link>
           </div>
         </div>
       </div>

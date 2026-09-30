@@ -1,171 +1,110 @@
-
-import React from 'react';
+import { Link } from "react-router-dom";
 import {
-  // Micro-icons for each industry
-  FaHeartbeat,     // Healthcare
-  FaReceipt,       // Finance
-  FaChalkboard,    // Education
-  FaShoppingBag,   // Retail
-  FaBalanceScale,  // Legal
-  FaTruck,         // Logistics
-} from 'react-icons/fa';
+  HeartPulse,
+  Landmark,
+  GraduationCap,
+  ShoppingBag,
+  Scale,
+  Truck,
+  ArrowRight,
+} from "lucide-react";
 
-/**
- * Industry content — concise & scannable
- * Each item has:
- * - name
- * - description (short lead)
- * - bullets (micro-highlights)
- * - icon (micro-icon for quick recognition)
- * - tint (light pastel background for illustration chip)
- */
 const industries = [
   {
-    name: 'Healthcare',
-    icon: FaHeartbeat,
-    tint: 'bg-rose-50',
+    name: "Healthcare",
+    icon: <HeartPulse size={24} aria-hidden="true" />,
     description:
-      'Streamline patient and clinical workflows with secure, accurate data operations.',
-    bullets: [
-      'Patient record capture & indexing',
-      'Medical transcription with speaker labels',
-      'Compliance-ready exports (on request)',
-    ],
+      "Patient records, clinical documents, and medical transcription.",
   },
   {
-    name: 'Finance',
-    icon: FaReceipt,
-    tint: 'bg-amber-50',
+    name: "Finance",
+    icon: <Landmark size={24} aria-hidden="true" />,
     description:
-      'Turn fragmented financial inputs into consistent, auditable datasets.',
-    bullets: [
-      'Digitize forms & statements',
-      'Transaction detail standardization',
-      'Audit-friendly outputs & logs',
-    ],
+      "Financial forms, statements, and consistent transaction records.",
   },
   {
-    name: 'Education',
-    icon: FaChalkboard,
-    tint: 'bg-sky-50',
+    name: "Education",
+    icon: <GraduationCap size={24} aria-hidden="true" />,
     description:
-      'Support student, course, and research operations with reliable data.',
-    bullets: [
-      'Enrollment & assessment capture',
-      'Lecture & panel transcription',
-      'Transcribe interviews & focus groups',
-    ],
+      "Student information, research interviews, and learning material.",
   },
-  
-{
-  name: 'Retail',
-  icon: FaShoppingBag,
-  tint: 'bg-lime-50',
-  description:
-    'Organize and clean retail data for smoother daily operations, accurate reporting, and clearer customer insights.',
-  bullets: [
-    'Organizing and cleaning receipts, invoices, and daily till summaries for error‑free reporting',
-    'Standardizing product names, SKUs, pricing fields, and categories across systems',
-    'Cleaning inventory logs and stock movement data to improve accuracy and reduce discrepancies',
-  ],
-},
-
-  
-{
-  name: 'Legal',
-  icon: FaBalanceScale,
-  tint: 'bg-violet-50',
-  description:
-    'Keep matters organized with structured, searchable case data.',
-  bullets: [
-    'Hearing & deposition transcription',
-    'Cleaning and organizing contract data for easier review and reference',
-    'Preparing structured case documentation by standardizing names, dates, and matter details',
-  ],
-},
-
-  
-{
-  name: 'Logistics',
-  icon: FaTruck,
-  tint: 'bg-cyan-50',
-  description:
-    'Improve supply chain visibility with cleaner operational data.',
-  bullets: [
-    'Organizing manifests, delivery notes, and BoL records into clean, searchable datasets',
-    'Standardizing shipment details such as routes, load types, timestamps, and carrier information',
-    'Cleaning and aligning depot, warehouse, and location data for clearer tracking and fewer discrepancies',
-  ],
-},
-
+  {
+    name: "Retail",
+    icon: <ShoppingBag size={24} aria-hidden="true" />,
+    description:
+      "Product catalogues, inventory records, and sales information.",
+  },
+  {
+    name: "Legal",
+    icon: <Scale size={24} aria-hidden="true" />,
+    description: "Case documentation, contract data, and hearing transcripts.",
+  },
+  {
+    name: "Logistics",
+    icon: <Truck size={24} aria-hidden="true" />,
+    description: "Delivery notes, shipment details, and warehouse records.",
+  },
 ];
 
 const IndustriesSection = () => {
   return (
     <section
       id="industries"
-      aria-label="Industries we serve"
-      // Brighter, light background (keeps brand hues but increases freshness & contrast)
-      className="w-full py-14 sm:py-16 px-4 sm:px-6 text-[#1e1b4b] bg-gradient-to-br from-[#fef7ee] via-white to-[#fdeee7]"
+      aria-labelledby="industries-heading"
+      className="sw-industries"
     >
-      <div className="mx-auto max-w-7xl text-center">
-        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4 text-[#1e1b4b]">
-          Industries We Serve
-        </h2>
+      <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-20 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:py-24">
+        <div className="lg:pt-5">
+          <p className="mb-5 text-xs font-bold tracking-[0.2em] text-orange-300 uppercase">
+            Industries we serve
+          </p>
 
-        <p className="text-base sm:text-lg mb-10 max-w-2xl mx-auto text-[#1e1b4b]/90 leading-relaxed">
-          We tailor our data capture, transcription, and data cleaning services to fit the
-          realities of your sector—so your teams move faster with dependable information.
-        </p>
+          <h2
+            id="industries-heading"
+            className="text-4xl leading-tight font-extrabold tracking-[-0.045em] text-white sm:text-5xl"
+          >
+            Different sectors.
+            <br />
+            <span className="sw-gradient-text">One clear purpose.</span>
+          </h2>
 
-        {/* Industry Cards */}
-        <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
-          role="list"
-          aria-label="Industry cards"
-        >
-          {industries.map(({ name, description, bullets, icon: Icon, tint }) => (
-            <article
-              key={name}
-              role="listitem"
-              className="relative bg-white p-6 rounded-xl shadow transition-all duration-300
-                         hover:-translate-y-1 hover:shadow-lg hover:bg-orange-50
-                         focus-within:shadow-lg motion-reduce:transition-none motion-reduce:hover:transform-none"
-            >
-              {/* Subtle illustration chip in the corner (very light / not distracting) */}
-              <div
-                aria-hidden="true"
-                className={`absolute -top-3 -right-3 ${tint} rounded-full w-16 h-16 opacity-70 blur-[1px]`}
-              />
+          <p className="mt-6 max-w-lg text-base leading-8 text-slate-300">
+            Every industry works with different information. We adapt our
+            capture, cleaning, and transcription services to your records,
+            requirements, and everyday workflows.
+          </p>
 
-              <div className="relative text-left">
-                {/* Micro-icon + heading row */}
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="inline-flex items-center justify-center rounded-full bg-gradient-to-br from-[#ff7200] to-[#be3c05] text-white w-10 h-10 shadow">
-                    <Icon className="text-lg" aria-hidden="true" />
-                  </span>
-                  <h3 className="text-lg sm:text-xl font-semibold text-[#1e1b4b]">
-                    {name}
-                  </h3>
-                </div>
+          <Link to="/industries" className="sw-button sw-button-secondary mt-8">
+            Explore industries
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
 
-                {/* Description */}
-                <p className="text-sm sm:text-base text-[#1e1b4b]/90 leading-relaxed max-w-prose mb-3">
-                  {description}
-                </p>
+          <div className="mt-10 border-l-2 border-orange-400/60 pl-5">
+            <p className="text-sm leading-7 text-slate-400">
+              Have a different kind of project?
+              <br />
+              <Link
+                to="/contact"
+                className="rounded text-orange-300 underline decoration-orange-300/40 underline-offset-4 hover:decoration-orange-300"
+              >
+                Tell us what you need.
+              </Link>
+            </p>
+          </div>
+        </div>
 
-                {/* Quick highlights (bullets) */}
-                <ul className="list-disc pl-5 text-sm sm:text-base text-[#1e1b4b] leading-relaxed space-y-1">
-                  {bullets.map((b) => (
-                    <li key={b}>
-                      {b}
-                    </li>
-                  ))}
-                </ul>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {industries.map((industry) => (
+            <article key={industry.name} className="sw-industry-tile">
+              <span className="sw-industry-icon">{industry.icon}</span>
 
-                {/* Focus ring target for a11y (if you later link cards) */}
-                <span className="absolute inset-0 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#ff7200]" />
-              </div>
+              <h3 className="mt-5 text-lg font-bold text-white">
+                {industry.name}
+              </h3>
+
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                {industry.description}
+              </p>
             </article>
           ))}
         </div>
